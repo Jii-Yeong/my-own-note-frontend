@@ -1,0 +1,39 @@
+{
+  "name": "my-own-note",
+  "version": "1.0.0",
+  "description": "notion  어플을 따라 만든 노트 웹 서비스",
+  "main": "index.js",
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "typescript": "^4.5.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7",
+    "babel-loader": "^8.2.3",
+    "html-loader": "^3.1.0",
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.2",
+    "webpack-merge": "^5.8.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve --config webpack.config.dev.js",
+    "build": "webpack build --config webpack.config.prd.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jii-Yeong/secret-note.git"
+  },
+  "author": "Jii-Yeong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jii-Yeong/secret-note/issues"
+  },
+  "homepage": "https://github.com/Jii-Yeong/secret-note#readme"
+}
