@@ -3,7 +3,7 @@ const base = require('./webpack.config.base');
 
 module.exports = merge(base, {
     mode: 'development',
-    entry: './src/index.js',
+    entry: './src/index.tsx',
     output: {
       filename: 'bundle.main.js'
     },
