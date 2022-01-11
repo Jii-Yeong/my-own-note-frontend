@@ -2,11 +2,11 @@ import React, { KeyboardEvent, RefObject } from "react";
 import styled from "styled-components";
 
 type Props = {
-  textAreaRef: RefObject<HTMLTextAreaElement>;
-  changeTextArea: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
+  textAreaRef: RefObject<HTMLDivElement>;
+  changeTextArea: (e: KeyboardEvent<HTMLDivElement>) => void;
 }
 
-const Wrapper = styled.textarea`
+const Wrapper = styled.div`
   width: 100%;
   height: 1000px;
   border: none;
@@ -19,7 +19,7 @@ const Wrapper = styled.textarea`
 
 const TextArea = ({ textAreaRef, changeTextArea }: Props) => {
   return (
-    <Wrapper ref={textAreaRef} onKeyUp={(e) => changeTextArea(e)}>
+    <Wrapper ref={textAreaRef} onKeyUp={(e) => changeTextArea(e)} contentEditable={true}>
     </Wrapper>
   )
 }
