@@ -1,4 +1,4 @@
-# secret-note
+# my own note
 notion  어플을 따라 만든 나만의 노트 서비스
 
 > #### 최초 작성일 : 2022-01-11
