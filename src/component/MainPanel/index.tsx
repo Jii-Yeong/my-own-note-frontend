@@ -1,65 +1,72 @@
 import TextArea from "$src/component/TextArea";
 import TextModal from "$src/component/TextModal";
-import { convertHtmlElements, NBSP, SPACE } from "$src/util/convert";
+import { store } from "$src/pages/MainPage/configureStore";
+import { setTextContents } from "$src/stores/modules/textContentSlice";
+import { RootState } from "$src/stores/types/text-content";
+import { COMMEND_REGEX } from "$src/util/constant";
+import { convertHtmlElements } from "$src/util/convert";
+import { CombinedState, EnhancedStore } from "@reduxjs/toolkit";
 import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
 `
+
+const textContent = (state: EnhancedStore<CombinedState<RootState>>) => state.getState().textContent;
+
 const MainPanel = () => {
-  const textAreaRef = useRef<HTMLDivElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [keyEventObject, setKeyEventObject]: [any, any] = useState({});
-  let [lineNumber, setLineNumber]: [number, any] = useState(0);
-
   const [isOpenTextModal, setOpenTextModal]: [boolean, any] = useState(false);
+  let [lineNumber, setLineNumber]: [number, any] = useState(0);
+  const textContents = textContent(store);
 
-  const handleChangeTextareaValue = (e: KeyboardEvent<HTMLDivElement>) => {
+  const dispatch = useDispatch();
+
+  const handleChangeTextareaValue = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     setKeyEventObject(e);
+    const contents = textAreaRef?.current?.value.split('\n');
+    dispatch(setTextContents({ contents }));
   }
 
   useEffect(() => {
-    if (textAreaRef.current) {
-      const childNodes = textAreaRef.current.childNodes;
-
-      if (childNodes?.length === 1 || childNodes?.length === 0) {
-        setLineNumber(0);
-      } else {
-        setLineNumber(childNodes?.length - 1);
-      }
-
-      const makeTextLine = childNodes[lineNumber] as HTMLElement;
-      const textLineParentNode = makeTextLine?.parentNode as HTMLElement;
-      const textLineLastChild = makeTextLine?.lastChild as HTMLElement;
-
-      convertHtmlElements(makeTextLine, textLineParentNode, textLineLastChild);
-
-      if (textLineParentNode?.innerHTML === `/${NBSP}`) {
-        setOpenTextModal(true);
-      } else {
-        setOpenTextModal(false);
-      }
-
-      if (makeTextLine?.innerText === `/${SPACE}`) {
-        setOpenTextModal(true);
-      } else {
-        setOpenTextModal(false);
-      }
-
-      if (makeTextLine?.innerText?.slice(-2, -1) === "/") {
-        setOpenTextModal(true);
-      } else {
-        setOpenTextModal(false);
-      }
-      
+    if (textContents.length === 0) {
+      setLineNumber(0)
+    } else {
+      setLineNumber(textContents.length - 1);
     }
-  }, [textAreaRef.current?.innerHTML]);
+
+    if (textContents[lineNumber] === '/ ') {
+      setOpenTextModal(true);
+    } else {
+      setOpenTextModal(false);
+    }
+
+    if (keyEventObject.key === 'Enter') {
+      setOpenTextModal(false);
+    }
+  }, [textContents]);
 
   return (
     <Wrapper>
       {isOpenTextModal && <TextModal />}
       <TextArea textAreaRef={textAreaRef} changeTextArea={handleChangeTextareaValue} />
+      <div>
+        {textContents.map((content: string, index: number) => {
+          const matchCommand = content.match(COMMEND_REGEX);
+          const sliceTextLineCommand = matchCommand ? matchCommand[0] : '';
+          const sliceTextLineContent = content.replace(COMMEND_REGEX, ``);
+          const replaceText = convertHtmlElements(content, sliceTextLineCommand, sliceTextLineContent);
+          return (
+            <div key={`contents-${index}`}>
+              {replaceText}
+            </div>
+          )
+        })}
+      </div>
     </Wrapper>
   )
 }
