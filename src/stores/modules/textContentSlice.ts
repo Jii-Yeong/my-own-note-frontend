@@ -1,19 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
 
- const textContentSlice = createSlice({
+ const textContentSlice = createSlice<Array<string>, SliceCaseReducers<Array<string>>, "textContents">({
    name: 'textContents',
    initialState: [],
    reducers: {
-     setTextContents(state, action) {
+     setTextContents(_, action) {
       const { contents } = action.payload;
-      return [
-        ...contents
-      ]
+      const redefineContents: Array<string> = [...contents];
+      return redefineContents;
      },
+
      addTextContents(state, action) {
        const { textLine } = action.payload;
        state.push(textLine);
      },
+     
      removeTextContents(state) {
        state.pop();
      }
