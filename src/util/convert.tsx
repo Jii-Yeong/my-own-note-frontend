@@ -1,6 +1,7 @@
 import React from "react";
 
 export const convertHtmlElements = (content: string, sliceTextLineCommand: string, sliceTextLineContent: string) => {
+  console.log("sliceTextLineCommand", sliceTextLineCommand);
   if (content.match(/^\*\*.*\*\*$/g)) {
     return <b>{content}</b>
   }
@@ -10,6 +11,13 @@ export const convertHtmlElements = (content: string, sliceTextLineCommand: strin
     return <h2>{sliceTextLineContent}</h2>
   } else if (sliceTextLineCommand === '### ') {
     return <h3>{sliceTextLineContent}</h3>
+  } else if (sliceTextLineCommand === '-[] ') {
+    return (
+      <label>
+        <input type="checkbox"/>
+        {sliceTextLineContent}
+      </label>
+    )
   } else if (sliceTextLineCommand === '- ' || sliceTextLineCommand === '* ') {
     return <li>{sliceTextLineContent}</li>
   } else if (sliceTextLineCommand === '> ') {
