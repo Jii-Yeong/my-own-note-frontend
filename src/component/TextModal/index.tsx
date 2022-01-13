@@ -1,5 +1,9 @@
-import React from "react";
+import React, { MouseEvent } from "react";
 import styled, { css } from "styled-components";
+
+type Props = {
+  clickTextList: (e: MouseEvent) => void;
+}
 
 const Wrapper = styled.div`
   width: 340px;
@@ -56,46 +60,54 @@ const textTranditionListData = [
   {
     title: '텍스트',
     image: 'text_thumbnail_icon.png',
-    description: '일반 텍스트를 사용해 쓰기를 시작하세요.'
+    description: '일반 텍스트를 사용해 쓰기를 시작하세요.',
+    command: '',
   },
   {
     title: '할 일 목록',
     image: 'todolist_thumbnail_icon.png',
-    description: '할 일 목록으로 작업을 추적하세요.'
+    description: '할 일 목록으로 작업을 추적하세요.',
+    command: '-[] ',
   },
   {
     title: '제목1',
     image: 'h1_thumbnail_icon.png',
-    description: '섹션 제목(대)'
+    description: '섹션 제목(대)',
+    command: '# ',
   },
   {
     title: '제목2',
     image: 'h2_thumbnail_icon.png',
-    description: '섹션 제목(중)'
+    description: '섹션 제목(중)',
+    command: '## ',
   },
   {
     title: '제목3',
     image: 'h3_thumbnail_icon.png',
-    description: '섹션 제목(소)'
+    description: '섹션 제목(소)',
+    command: '### ',
   },
   {
     title: '글머리 기호 목록',
     image: 'textheaderlist_thumbnail_icon.png',
-    description: '간단한 글머리 기호 목록을 생성하세요.'
+    description: '간단한 글머리 기호 목록을 생성하세요.',
+    command: '- ',
   },
   {
     title: '번호 매기기 목록',
     image: 'numberlist_thumbnail_icon.png',
-    description: '번호가 매겨진 목록을 생성하세요.'
+    description: '번호가 매겨진 목록을 생성하세요.',
+    command: '',
   },
   {
     title: '인용',
     image: 'numberlist_thumbnail_icon.png',
-    description: '인용문을 작성하세요.'
+    description: '인용문을 작성하세요.',
+    command: '> ',
   },
 ]
 
-const TextModal = () => {
+const TextModal = ({ clickTextList } : Props) => {
   return (
     <Wrapper>
       <Title>
@@ -103,7 +115,7 @@ const TextModal = () => {
       </Title>
       <TextTransitionWrapper>
       {textTranditionListData.map((data) => (
-          <TextTransitionList>
+          <TextTransitionList onClick={(e) => clickTextList(e)} data-command={data.command}>
             <ThumbnailImage imageURL={data.image} />
             <div>
               {data.title}

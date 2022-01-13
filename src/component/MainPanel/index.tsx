@@ -1,7 +1,7 @@
 import TextArea from "$src/component/TextArea";
 import TextModal from "$src/component/TextModal";
 import { store } from "$src/pages/MainPage/configureStore";
-import { setTextContents } from "$src/stores/modules/textContentSlice";
+import { changeTextContetns, setTextContents } from "$src/stores/modules/textContentSlice";
 import { RootState } from "$src/stores/types/text-content";
 import { COMMEND_REGEX } from "$src/util/constant";
 import { convertHtmlElements } from "$src/util/convert";
@@ -48,11 +48,23 @@ const MainPanel = () => {
     if (keyEventObject.key === 'Enter') {
       setOpenTextModal(false);
     }
+
+    if (keyEventObject.target) {
+      keyEventObject.target.value = textContents.join('\n');
+    }
   }, [textContents]);
 
+  const handleClickTextConvertButton = (e : React.MouseEvent<Element, MouseEvent>) => {
+    const currentElement = e.currentTarget as HTMLElement;
+    const textLine = currentElement?.dataset.command;;
+    dispatch(changeTextContetns({ lineNumber, textLine }));
+    keyEventObject.target.focus();
+    setOpenTextModal(false);
+  }
+  
   return (
     <Wrapper>
-      {isOpenTextModal && <TextModal />}
+      {isOpenTextModal && <TextModal clickTextList={handleClickTextConvertButton} />}
       <TextArea textAreaRef={textAreaRef} changeTextArea={handleChangeTextareaValue} />
       <div>
         {textContents.map((content: string, index: number) => {
