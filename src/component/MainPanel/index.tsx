@@ -6,7 +6,7 @@ import { RootState } from "$src/stores/types/text-content";
 import { COMMEND_REGEX } from "$src/util/constant";
 import { convertHtmlElements } from "$src/util/convert";
 import { CombinedState, EnhancedStore } from "@reduxjs/toolkit";
-import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
+import React, { KeyboardEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
@@ -19,9 +19,9 @@ const textContent = (state: EnhancedStore<CombinedState<RootState>>) => state.ge
 
 const MainPanel = () => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [keyEventObject, setKeyEventObject]: [any, any] = useState({});
-  const [isOpenTextModal, setOpenTextModal]: [boolean, any] = useState(false);
-  let [lineNumber, setLineNumber]: [number, any] = useState(0);
+  const [keyEventObject, setKeyEventObject] : [any, any] = useState({});
+  const [isOpenTextModal, setOpenTextModal] : [boolean, any] = useState(false);
+  let [lineNumber, setLineNumber] : [number, any] = useState(0);
   const textContents = textContent(store);
 
   const dispatch = useDispatch();
@@ -39,8 +39,9 @@ const MainPanel = () => {
       setLineNumber(textContents.length - 1);
     }
 
-    if (textContents[lineNumber] === '/ ') {
+    if (keyEventObject.key === '/') {
       setOpenTextModal(true);
+      keyEventObject.key = '';
     } else {
       setOpenTextModal(false);
     }
@@ -49,19 +50,33 @@ const MainPanel = () => {
       setOpenTextModal(false);
     }
 
-    if (keyEventObject.target) {
-      keyEventObject.target.value = textContents.join('\n');
-    }
   }, [textContents]);
 
-  const handleClickTextConvertButton = (e : React.MouseEvent<Element, MouseEvent>) => {
+  const handleClickTextConvertButton = (e : MouseEvent) => {
     const currentElement = e.currentTarget as HTMLElement;
-    const textLine = currentElement?.dataset.command;;
-    dispatch(changeTextContetns({ lineNumber, textLine }));
-    keyEventObject.target.focus();
+    const command = currentElement?.dataset.command;
+
+    const makeTextContents = textContents.map((content, index) => {
+      if (content.search(/\//) > -1) {
+        const textLine = command + content.replace('/', '');
+        setLineNumber(index);
+        dispatch(changeTextContetns({ lineNumber: index, textLine }));
+        return textLine;
+      }
+      return content;
+    });
+
+    if (textAreaRef.current && command) {
+      const startPoint = textAreaRef.current.selectionStart + command?.length;
+      textAreaRef.current.value = makeTextContents.join('\n');
+      textAreaRef.current.focus();
+      console.log("startPoint", startPoint);
+      textAreaRef.current.setSelectionRange(startPoint, startPoint);
+    }
+    
     setOpenTextModal(false);
   }
-  
+
   return (
     <Wrapper>
       {isOpenTextModal && <TextModal clickTextList={handleClickTextConvertButton} />}
