@@ -1,6 +1,6 @@
 import { createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
 
- const textContentSlice = createSlice<Array<string>, SliceCaseReducers<Array<string>>, "textContents">({
+ const textContentSlice = createSlice<Array<string>, SliceCaseReducers<Array<string>>, 'textContents'>({
    name: 'textContents',
    initialState: [],
    reducers: {
