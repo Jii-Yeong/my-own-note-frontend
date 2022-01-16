@@ -1,99 +1,126 @@
-import TextArea from "$src/component/TextArea";
-import TextModal from "$src/component/TextModal";
-import { store } from "$src/pages/MainPage/configureStore";
-import { changeTextContetns, setTextContents } from "$src/stores/modules/textContentSlice";
-import { RootState } from "$src/stores/types/text-content";
 import { COMMEND_REGEX } from "$src/util/constant";
 import { convertHtmlElements } from "$src/util/convert";
-import { CombinedState, EnhancedStore } from "@reduxjs/toolkit";
-import React, { KeyboardEvent, MouseEvent, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { DragEvent, KeyboardEvent, useEffect, useState } from "react";
 import styled from "styled-components";
+import ReactDOM from "react-dom";
+import InputTitle from "../InputTitle";
+import ContentBox from "../ContentBox";
 
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
 `
 
-const textContent = (state: EnhancedStore<CombinedState<RootState>>) => state.getState().textContent;
+const Input = styled.input`
+  display: block;
+  height: 30px;
+  width: 93%;
+  margin: 0 auto;
+  border: none;
+  font-size: 15px;
+  font-family: 'nanum';
+  &: focus {
+    outline: none;
+  }
+`
 
 const MainPanel = () => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [keyEventObject, setKeyEventObject] : [any, any] = useState({});
-  const [isOpenTextModal, setOpenTextModal] : [boolean, any] = useState(false);
-  let [lineNumber, setLineNumber] : [number, any] = useState(0);
-  const textContents = textContent(store);
+  const divRef = React.createRef() as React.RefObject<HTMLDivElement>;
+  const inputWrapperRef = React.createRef() as React.RefObject<HTMLDivElement>;
+  const [styleObject, setStyleObject] = useState({});
 
-  const dispatch = useDispatch();
-
-  const handleChangeTextareaValue = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    setKeyEventObject(e);
-    const contents = textAreaRef?.current?.value.split('\n');
-    dispatch(setTextContents({ contents }));
+  const handleInputKeyUp = (e: KeyboardEvent) => {
+    const currentTarget = e.target as HTMLElement;
+    const nextTarget = currentTarget.parentNode?.nextSibling?.firstChild as HTMLElement;
+    const prevTarget = currentTarget.parentNode?.previousSibling?.firstChild as HTMLElement;
+    if (e.key === 'Enter' || e.key === 'ArrowDown') {
+      nextTarget.focus();
+    }
+    if (e.key === 'ArrowUp') {
+      prevTarget.focus();
+    }
   }
 
   useEffect(() => {
-    if (textContents.length === 0) {
-      setLineNumber(0)
-    } else {
-      setLineNumber(textContents.length - 1);
+    const startInput = inputWrapperRef.current?.firstChild as HTMLElement;
+    startInput.focus();
+  }, [])
+
+  const handleDragOverElement = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  }
+
+  const handleDragStartElement = (divEl: HTMLDivElement) => {
+    divEl.setAttribute("id", 'clicked');
+  }
+
+  const handleDropElement = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const currentTarget = e.target as HTMLElement;
+    const dragDiv = document.getElementById('clicked');
+    const dragInput = dragDiv?.firstChild?.cloneNode();
+    const dropInput = currentTarget.firstChild?.cloneNode() as Node;
+    dragInput?.addEventListener('keyup', handleInputKeyUp);
+    dropInput?.addEventListener('keyup', handleInputKeyUp);
+    if (dragInput) {
+      dragDiv?.firstChild?.remove();
+      dragDiv?.appendChild(dropInput);
+      currentTarget.firstChild?.remove();
+      currentTarget.appendChild(dragInput);
+      dragDiv?.removeAttribute('id');
+    }
+  }
+
+  const handlePressEnterKey = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const divEl = document.createElement('div');
+      divEl.draggable = true;
+      divEl.addEventListener('dragover', handleDragOverElement);
+      divEl.addEventListener('dragstart', () => {
+        handleDragStartElement(divEl);
+      });
+      divEl.addEventListener('drop', handleDropElement);
+      ReactDOM.render(<Input onKeyUp={(e) => handleInputKeyUp(e)} />, divEl);
+      let newInputEl = divEl.firstChild as HTMLInputElement
+      let oldInputEl = inputWrapperRef.current?.firstChild as HTMLInputElement;
+      newInputEl.value = oldInputEl.value;
+      oldInputEl.value = '';
+      const changeStyleList = Object.keys(styleObject) as Array<string>;
+      changeStyleList.forEach(style => {
+        newInputEl.style[style] = styleObject[`${style}`];
+        oldInputEl.removeAttribute('style');
+      })
+      divRef.current?.insertBefore(divEl, inputWrapperRef.current);
     }
 
-    if (keyEventObject.key === '/') {
-      setOpenTextModal(true);
-      keyEventObject.key = '';
-    } else {
-      setOpenTextModal(false);
+    if (e.key === 'ArrowUp') {
+      const currentTarget = e.target as HTMLElement;
+      const prevInputEl = currentTarget?.parentNode?.previousSibling?.firstChild as HTMLElement;
+      prevInputEl.focus()
     }
 
-    if (keyEventObject.key === 'Enter') {
-      setOpenTextModal(false);
-    }
-
-  }, [textContents]);
-
-  const handleClickTextConvertButton = (e : MouseEvent) => {
-    const currentElement = e.currentTarget as HTMLElement;
-    const command = currentElement?.dataset.command;
-
-    const makeTextContents = textContents.map((content, index) => {
-      if (content.search(/\//) > -1) {
-        const textLine = command + content.replace('/', '');
-        setLineNumber(index);
-        dispatch(changeTextContetns({ lineNumber: index, textLine }));
-        return textLine;
-      }
-      return content;
-    });
-
-    if (textAreaRef.current && command) {
-      const startPoint = textAreaRef.current.selectionStart + command?.length;
-      textAreaRef.current.value = makeTextContents.join('\n');
-      textAreaRef.current.focus();
-      console.log("startPoint", startPoint);
-      textAreaRef.current.setSelectionRange(startPoint, startPoint);
-    }
-    
-    setOpenTextModal(false);
+    const currentTarget = e.target as HTMLInputElement;
+    const content = currentTarget.value;
+    const matchCommand = content.match(COMMEND_REGEX);
+    const sliceTextLineCommand = matchCommand ? matchCommand[0] : '';
+    const sliceTextLineContent = content.replace(COMMEND_REGEX, ``);
+    const replaceText = convertHtmlElements(content, sliceTextLineCommand, sliceTextLineContent);
+    const styleList = Object.keys(replaceText);
+    styleList.forEach(style => {
+      currentTarget.style[style] = replaceText[`${style}`];
+    })
+    setStyleObject(replaceText);
   }
 
   return (
     <Wrapper>
-      {isOpenTextModal && <TextModal clickTextList={handleClickTextConvertButton} />}
-      <TextArea textAreaRef={textAreaRef} changeTextArea={handleChangeTextareaValue} />
-      <div>
-        {textContents.map((content: string, index: number) => {
-          const matchCommand = content.match(COMMEND_REGEX);
-          const sliceTextLineCommand = matchCommand ? matchCommand[0] : '';
-          const sliceTextLineContent = content.replace(COMMEND_REGEX, ``);
-          const replaceText = convertHtmlElements(content, sliceTextLineCommand, sliceTextLineContent);
-          return (
-            <div key={`contents-${index}`}>
-              {replaceText}
-            </div>
-          )
-        })}
-      </div>
+      <InputTitle />
+      <ContentBox
+        divRef={divRef}
+        inputWrapperRef={inputWrapperRef}
+        pressEnterKey={handlePressEnterKey}
+        dragOverElement={handleDragOverElement}
+        dropElement={handleDragOverElement} />
     </Wrapper>
   )
 }
