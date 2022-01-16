@@ -6,23 +6,41 @@ export const convertHtmlElements = (content: string, sliceTextLineCommand: strin
     return <b>{content}</b>
   }
   if (sliceTextLineCommand === '# ') {
-    return <h1>{sliceTextLineContent}</h1>
+    return {
+      fontSize: '30px',
+      height: '50px',
+      placeholder: '제목1',
+    }
   } else if (sliceTextLineCommand === '## ') {
-    return <h2>{sliceTextLineContent}</h2>
+    return {
+      fontSize: '20px',
+      height: '30px',
+      placeholder: '제목2',
+    }
   } else if (sliceTextLineCommand === '### ') {
-    return <h3>{sliceTextLineContent}</h3>
+    return {
+      fontSize: '15px',
+      height: '20px',
+      placeholder: '제목3',
+    }
   } else if (sliceTextLineCommand === '-[] ') {
-    return (
-      <label>
-        <input type="checkbox"/>
-        {sliceTextLineContent}
-      </label>
-    )
+    return {
+      fontSize: '30px',
+      height: '50px',
+    }
   } else if (sliceTextLineCommand === '- ' || sliceTextLineCommand === '* ') {
-    return <li>{sliceTextLineContent}</li>
+    return {
+      fontSize: '30px',
+      height: '50px',
+      placeholder: '리스트',
+    }
   } else if (sliceTextLineCommand === '> ') {
-    return <blockquote>{sliceTextLineContent}</blockquote>
+    return {
+      fontSize: '30px',
+      height: '50px',
+      placeholder: '인용문',
+    }
   } else {
-    return content;
+    return {};
   }
 }
