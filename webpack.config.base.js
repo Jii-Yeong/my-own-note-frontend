@@ -26,6 +26,18 @@ module.exports = {
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"]
+      },
+      {
+        test: /.*\.(gif|png|jpe?g|svg)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+                limit: 8000,
+                name: 'images/[hash]-[name].[ext]'
+            },
+          },
+        ]
       }
     ],
   },
@@ -37,7 +49,8 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: {
-      '$src': path.resolve(__dirname, './src')
+      '$src': path.resolve(__dirname, './src'),
+      '$config': path.resolve(__dirname, './config'),
     }
   }
 }
