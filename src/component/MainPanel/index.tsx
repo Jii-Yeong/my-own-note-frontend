@@ -42,9 +42,11 @@ const MainPanel = () => {
   }
 
   const handleDragOverElement = (e: DragEvent | React.DragEvent<HTMLElement>) => {
-    e.preventDefault();
     const target = e.target as HTMLElement;
-    target.style.borderBottom = '2px solid #0000005f';
+    if (target.tagName === 'DIV') {
+      e.preventDefault();
+      target.style.borderBottom = '2px solid #0000005f';
+    }
   }
 
   const handleDragLeaveElement = (e: DragEvent | React.DragEvent<HTMLElement>) => {
@@ -64,14 +66,14 @@ const MainPanel = () => {
     const dragDiv = document.getElementById('clicked');
     const dragInput = dragDiv?.firstChild?.cloneNode() as HTMLElement;
     const dropInput = currentTarget.firstChild?.cloneNode() as HTMLElement;
-    if (dragDiv && dragInput && dropInput && dragInput.tagName !== 'INPUT') {
+    if (dragInput && dropInput) {
       dragInput.addEventListener('keyup', handleInputKeyUp);
       dropInput.addEventListener('keyup', handleInputKeyUp);
-      dragDiv.firstChild?.remove();
-      dragDiv.appendChild(dropInput);
+      dragDiv?.firstChild?.remove();
+      dragDiv?.appendChild(dropInput);
       currentTarget.firstChild?.remove();
       currentTarget.appendChild(dragInput);
-      dragDiv.removeAttribute('id');
+      dragDiv?.removeAttribute('id');
       target.style.borderBottom = 'none';
     }
   }
@@ -79,9 +81,8 @@ const MainPanel = () => {
   const handleInputKeyUp = (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
     const currentTarget = e.target as HTMLInputElement;
     const parentNode = currentTarget.parentNode as HTMLElement;
-    const nextTarget = currentTarget.parentNode?.nextSibling?.firstChild as HTMLElement;
-    const prevTarget = currentTarget.parentNode?.previousSibling?.firstChild as HTMLElement;
-    const firstChildFornextSibling = parentNode.nextSibling?.firstChild as HTMLElement;
+    const nextTarget = parentNode.nextSibling?.firstChild as HTMLElement;
+    const prevTarget = parentNode.previousSibling?.firstChild as HTMLElement;
     
     if (e.key === 'Enter') {
       const divEl = document.createElement('div');
@@ -95,7 +96,9 @@ const MainPanel = () => {
       divEl.addEventListener('drop', handleDropElement);
       ReactDOM.render(<Input onKeyUp={(e) => handleInputKeyUp(e)} />, divEl);
       parentNode.after(divEl);
-      firstChildFornextSibling.focus();
+      
+      const divFirstChild = divEl.firstChild as HTMLElement;
+      divFirstChild.focus();
     }
 
     if (e.key === 'ArrowDown') {
