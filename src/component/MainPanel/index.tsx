@@ -1,4 +1,4 @@
-import { COMMEND_REGEX } from "$src/util/constant";
+import { COMMEND_REGEX, SLICE_REGEX } from "$src/util/constant";
 import { convertHtmlElements } from "$src/util/convert";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -43,7 +43,8 @@ const MainPanel = () => {
 
   const handleDragOverElement = (e: DragEvent | React.DragEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
-    if (target.tagName === 'DIV') {
+    const firstChild = target.firstChild as HTMLInputElement;
+    if (target && target.tagName === 'DIV' && !firstChild.placeholder) {
       e.preventDefault();
       target.style.borderBottom = '2px solid #0000005f';
     }
@@ -74,8 +75,8 @@ const MainPanel = () => {
       currentTarget.firstChild?.remove();
       currentTarget.appendChild(dragInput);
       dragDiv?.removeAttribute('id');
-      target.style.borderBottom = 'none';
     }
+    target.style.borderBottom = 'none';
   }
 
   const handleInputKeyUp = (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
@@ -96,13 +97,12 @@ const MainPanel = () => {
       divEl.addEventListener('drop', handleDropElement);
       ReactDOM.render(<Input onKeyUp={(e) => handleInputKeyUp(e)} />, divEl);
       parentNode.after(divEl);
-      
+
       const divFirstChild = divEl.firstChild as HTMLElement;
       divFirstChild.focus();
     }
 
     if (e.key === 'ArrowDown') {
-      console.log(nextTarget);
       nextTarget.focus();
     }
 
@@ -126,13 +126,17 @@ const MainPanel = () => {
     const currentTargetCommand = e.currentTarget.dataset.command as string;
     const replaceText = convertHtmlElements('', currentTargetCommand, '') as {[key: string]: any};
     const styleList = Object.keys(replaceText);
-    const currentInputStyle = currentInputEl?.style as { [key: string]: any };
-    styleList.forEach(style => {
-      currentInputStyle[style] = replaceText[`${style}`];
-    })
-    currentInputEl?.focus();
-    setStyleObject(replaceText);
-    setOpenTextModalState(false);
+    if (currentInputEl) {
+      const currentInputStyle = currentInputEl?.style as { [key: string]: any };
+      styleList.forEach(style => {
+        currentInputStyle[style] = replaceText[`${style}`];
+      })
+      const currentInputContent = currentInputEl?.value;
+      currentInputEl.value = currentInputContent?.replace(SLICE_REGEX, '');
+      setStyleObject(replaceText);
+      setOpenTextModalState(false);
+      currentInputEl.focus();
+    }
   }
 
   const handlePressEnterKey = (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
@@ -157,7 +161,6 @@ const MainPanel = () => {
         newInputElStyle[style] = styleObject[`${style}`];
         oldInputEl.removeAttribute('style');
       })
-      console.log(oldInputEl.style);
       divRef.current?.insertBefore(divEl, inputWrapperRef.current);
     }
 
@@ -172,7 +175,6 @@ const MainPanel = () => {
       setCurrentInputEl(windowSelection);
       setOpenTextModalState(true);
     }
-
     const currentTarget = e.target as HTMLInputElement;
     const content = currentTarget.value;
     const matchCommand = content.match(COMMEND_REGEX);
@@ -184,6 +186,8 @@ const MainPanel = () => {
     styleList.forEach(style => {
       targetStyle[style] = replaceText[`${style}`];
     })
+    currentTarget.value = content.replace(SLICE_REGEX, '');
+
     setStyleObject(replaceText);
   }
 
