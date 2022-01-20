@@ -1,8 +1,8 @@
-import React, { MouseEvent } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 
 type Props = {
-  clickTextList: (e: MouseEvent) => void;
+  clickTextList: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 const Wrapper = styled.div`
