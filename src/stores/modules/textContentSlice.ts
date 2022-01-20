@@ -6,9 +6,7 @@ import { createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
    reducers: {
      setTextContents(_, action) {
       const { contents } = action.payload;
-      console.log("contents", contents);
       const redefineContents: Array<string> = [...contents];
-      console.log("redefineContents", redefineContents);
       return redefineContents;
     },
 

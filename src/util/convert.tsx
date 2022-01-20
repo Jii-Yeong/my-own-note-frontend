@@ -1,7 +1,6 @@
 import React from "react";
 
 export const convertHtmlElements = (content: string, sliceTextLineCommand: string, sliceTextLineContent: string) => {
-  console.log("sliceTextLineCommand", sliceTextLineCommand);
   if (content.match(/^\*\*.*\*\*$/g)) {
     return <b>{content}</b>
   }

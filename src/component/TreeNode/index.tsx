@@ -41,9 +41,7 @@ const TreeNode = ({ pageList, selectedPageList, clickToggleDepths }: Props) => {
   return (
     <Wrapper>
       {pageList.filter(page => page.parentPageId === "00").map((page, index) => {
-        console.log("page", selectedPageList.filter(select => select.parentPageId === page.pageId));
         const isOpen = (pageId: string) => selectedPageList.filter(select => select.parentPageId === pageId).length !== 0;
-        console.log("page", selectedPageList);
         return (
           <TreeWrapper key={`${page.pageId}-${index}`}>
             <TriagleButton onClick={() => clickToggleDepths(page.pageId)} isOpen={isOpen(page.pageId)}/>
