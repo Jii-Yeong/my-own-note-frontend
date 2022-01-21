@@ -1,4 +1,4 @@
-import { COMMEND_REGEX, SLICE_REGEX } from "$src/util/constant";
+import { SLICE_REGEX } from "$src/util/constant";
 import { convertHtmlElements, convertInputValue } from "$src/util/convert";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -120,7 +120,6 @@ const MainPanel = () => {
       prevTarget.focus();
       parentNode.remove();
     }
-
     convertInputValue(currentTarget, setStyleObject);
   }
 
@@ -165,7 +164,6 @@ const MainPanel = () => {
         newInputElStyle[style] = styleObject[`${style}`];
         oldInputEl.removeAttribute('style');
       })
-      console.log("newInputElStyle", newInputElStyle.fontSize);
       divRef.current?.insertBefore(divEl, inputWrapperRef.current);
     }
 
