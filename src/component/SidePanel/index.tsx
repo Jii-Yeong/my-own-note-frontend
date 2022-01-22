@@ -1,8 +1,15 @@
-import { useAppDispatch } from "$src/pages/MainPage/configureStore";
-import { selectAllPageList } from "$src/stores/modules/pageSlice";
+import { insertPageToUser, selectAllPageList, selectPageListToPageId, setPageId } from "$src/stores/modules/pageSlice";
+import { logInPage } from "$src/stores/modules/userSlice";
+import { RootState } from "$src/stores/types/root";
 import { PAGE_LIST } from "$src/types/page";
+import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import AddPage from "../AddPage";
+import Button from "../Button";
+import LoginModal from "../LoginModal";
+import RegisterModal from "../RegisterModal";
 import TreeNode from "../TreeNode";
 
 const Wrapper = styled.div`
@@ -19,26 +26,23 @@ const NoteTitle = styled.div`
 `
 
 const SidePanel = () => {
-  const dispatch = useAppDispatch();
-  const [pageList, setPageList]: [Array<PAGE_LIST>, any] = useState([]);
+  const userId = useSelector((state: RootState) => state.userInfo.id, shallowEqual);
+  const pageList = useSelector((state: RootState) => state.page.pageList, shallowEqual);
   const [selectedPageList, setSelectedPageList]: [Array<PAGE_LIST>, any] = useState([]);
+  const [isRegisterModalOpen, setRegisterModalOpenState] = useState(false);
+  const [isLoginModalOpen, setLoginModalOpenState] = useState(false);
+  const [isAdditingPage, setAdditionPageState] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const executedispatch = async () => {
-      const resultAction = await dispatch(selectAllPageList({}));
-      if (selectAllPageList.fulfilled.match(resultAction)) {
-        const getPageList = resultAction.payload;
-        setPageList(getPageList);
-      } else {
-        if (!resultAction.payload) {
-        }
-      }
+      await dispatch(selectAllPageList(userId));
     }
     executedispatch();
-  }, [])
+  }, []);
 
-  const handleClickToggleDepths = (pageId: string) => {
-    const makePageList = pageList.map((page) => {
+  const handleClickToggleDepths = (pageId: number) => {
+    const makePageList = pageList.pages.map((page) => {
       if (pageId === page.parentPageId) {
         return {
           ...page,
@@ -48,15 +52,83 @@ const SidePanel = () => {
       return page;
     })
     const makeSelectedPageList = makePageList.filter(page => page.isSelected);
-    setPageList(makePageList);
     setSelectedPageList(makeSelectedPageList);
   }
 
+  const handleOpenRegisterModal = () => {
+    setRegisterModalOpenState(true);
+  }
+
+  const handleCloseRegisterModal = () => {
+    setRegisterModalOpenState(false);
+  }
+
+  const handleOpenLoginModal = () => {
+    setLoginModalOpenState(true);
+  }
+
+  const handleCloseLoginModal = () => {
+    setLoginModalOpenState(false);
+  }
+
+  const registerFormik = useFormik({
+    initialValues: {
+      id: '',
+      password: '',
+      nickname: '',
+    },
+    onSubmit: values => {
+      console.log("values", values);
+    },
+  });
+
+  const loginFormik = useFormik({
+    initialValues: {
+      id: '',
+      password: ''
+    },
+    onSubmit: async info => {
+      console.log("info", info);
+      dispatch(logInPage(info));
+    }
+  })
+
+  const handleToggleAddPost = () => {
+    setAdditionPageState(!isAdditingPage);
+  }
+
+  const handleEnterAddPage = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const title = e.currentTarget.value;
+      await dispatch(insertPageToUser({ title, userId }));
+      await dispatch(selectAllPageList(userId));
+      setAdditionPageState(false);
+    }
+  }
+
+  const handleClickPageTitle = (pageId: number, title: string) => {
+    console.log("handle", pageId);
+    dispatch(setPageId({ pageId }));
+    dispatch(selectPageListToPageId({pageId, title}));
+  }
+
   return (
+    <>
+      {isRegisterModalOpen && 
+        <RegisterModal formik={registerFormik} clickClose={handleCloseRegisterModal} />
+      }
+      {isLoginModalOpen && 
+        <LoginModal formik={loginFormik} clickClose={handleCloseLoginModal} />
+      }
+      
     <Wrapper>
+      <Button name="로그인" buttonClick={handleOpenLoginModal} />
+      <Button name="회원가입" buttonClick={handleOpenRegisterModal} />
       <NoteTitle>✨ 내 노트</NoteTitle>
-      <TreeNode pageList={pageList} selectedPageList={selectedPageList} clickToggleDepths={handleClickToggleDepths} />
+      <TreeNode pageList={pageList.pages} selectedPageList={selectedPageList} clickToggleDepths={handleClickToggleDepths} clickPageTitle={handleClickPageTitle}/>
+      <AddPage isAdditing={isAdditingPage} clickAddMode={handleToggleAddPost} enterAddPage={handleEnterAddPage} />
     </Wrapper>
+    </>
   )
 }
 
