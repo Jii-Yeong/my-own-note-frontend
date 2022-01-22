@@ -14,6 +14,7 @@ import RegisterModal from "../RegisterModal";
 import LoginModal from "../LoginModal";
 import { initPageList } from "$src/stores/modules/pageSlice";
 import Header from "../Header/Header";
+import IntroducePanel from "../IntroducePanel";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -36,19 +37,21 @@ const MainPanel = () => {
 
   useEffect(() => {
     const startInput = inputWrapperRef.current?.firstChild as HTMLElement;
-    startInput.focus();
+    if (currentPageId) {
+      startInput.focus();
+    }
   }, [])
 
   useEffect(() => {
-    const wrapper = divRef.current;
+    const wrapper = document.getElementById('wrapper') as HTMLDivElement;
     const wrapperNodeList = wrapper?.querySelectorAll('.new-div') as NodeList;
-    const newDivElList = Array.from(wrapperNodeList);
-    newDivElList.forEach(div => {
-      wrapper?.removeChild(div);
-    })
-    if (pageContent.text) {
+    if (currentPageId && pageContent.text && wrapper) {
+      const newDivElList = Array.from(wrapperNodeList);
+      newDivElList.forEach(div => {
+        wrapper?.removeChild(div);
+      })
       pageContent.text.forEach((content: { [key: string]: any }) => {
-        const divEl = createInputEl(handleInputKeyUp, content.text) as HTMLElement;
+        const divEl = createInputEl(handleInputKeyUp, wrapper, currentPageId, content.text) as HTMLElement;
         wrapper?.prepend(divEl);
       })
     }
@@ -59,7 +62,7 @@ const MainPanel = () => {
     const parentNode = currentTarget.parentNode as HTMLElement;
     const nextTarget = parentNode.nextSibling?.firstChild as HTMLElement;
     const prevTarget = parentNode.previousSibling?.firstChild as HTMLElement;
-    const wrapper = document.getElementById('wrapper');
+    const wrapper = document.getElementById('wrapper') as HTMLDivElement;
 
     if (e.key === 'Enter') {
       insertInpulElToMiddleInput(handleInputKeyUp, parentNode);
@@ -118,7 +121,7 @@ const MainPanel = () => {
 
   const handlePressEnterKey = (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
     const currentTarget = e.target as HTMLInputElement;
-    const wrapper = document.getElementById('wrapper');
+    const wrapper = document.getElementById('wrapper') as HTMLDivElement;
     console.log("wrapper", wrapper);
     if (e.key === 'Enter') {
       setStyleObject({});
@@ -140,11 +143,11 @@ const MainPanel = () => {
     }
     convertInputValue(currentTarget, setStyleObject);
   }
-  const nickname = useSelector((state: RootState) => state.userInfo.nickname, shallowEqual);
 
   const [isRegisterModalOpen, setRegisterModalOpenState] = useState(false);
   const [isLoginModalOpen, setLoginModalOpenState] = useState(false);
   const [isClickedLoginButton, setLoginButtonState] = useState(false);
+
   const handleOpenRegisterModal = () => {
     setRegisterModalOpenState(true);
   }
@@ -185,7 +188,6 @@ const MainPanel = () => {
       password: ''
     },
     onSubmit: async info => {
-      console.log("info", info);
       dispatch(logInPage(info));
     }
   })
@@ -205,18 +207,27 @@ const MainPanel = () => {
       {(isLoginModalOpen || (!userId && isClickedLoginButton)) &&
         <LoginModal formik={loginFormik} clickClose={handleCloseLoginModal} clickCloseIcon={handleClickCloseButton} />
       }
-      <Header 
+      <Header
         clickLogout={handleClickLogout}
         openLoginModal={handleOpenLoginModal}
         openRegisterModal={handleOpenRegisterModal}
       />
-      <InputTitle title={pageContent.title ?? ''} />
-      <ContentBox
-        divRef={divRef}
-        inputWrapperRef={inputWrapperRef}
-        pressEnterKey={handlePressEnterKey}
-        dragOverElement={handleDragOverElement}
-        dropElement={handleDragOverElement} />
+
+      {userId && currentPageId ?
+        <>
+          <InputTitle title={pageContent.title ?? ''} />
+          <ContentBox
+            divRef={divRef}
+            inputWrapperRef={inputWrapperRef}
+            pressEnterKey={handlePressEnterKey}
+            dragOverElement={handleDragOverElement}
+            dropElement={handleDragOverElement} />
+        </>
+        : userId ?
+        <IntroducePanel />
+        :
+        <div>로그인 해줘</div>
+      }
     </Wrapper>
   )
 }

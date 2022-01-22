@@ -46,7 +46,7 @@ export const handleDropElement = (e: DragEvent | React.DragEvent<HTMLElement>, h
 
 const useDom = () => {
   const dispatch = useDispatch();
-  const createInputEl = (handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, text?: string) => {
+  const createInputEl = (handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, wrapper?: HTMLDivElement, currentPageId?: number, text?: string) => {
     const divEl = document.createElement('div');
     divEl.draggable = true;
     divEl.className = 'new-div'
@@ -57,7 +57,11 @@ const useDom = () => {
     divEl.addEventListener('dragend', handleDragEndElement);
     divEl.addEventListener('dragleave', handleDragLeaveElement);
     divEl.addEventListener('drop', (e) => {
-      handleDropElement(e, handleInputKeyUp)
+      handleDropElement(e, handleInputKeyUp);
+      if (wrapper && currentPageId) {
+        saveInputAllContent(wrapper, currentPageId);
+      }
+      console.log("실행중");
     });
     const inputEl = document.createElement('input');
     inputEl.addEventListener('keyup', handleInputKeyUp);
@@ -99,7 +103,7 @@ const useDom = () => {
     divRef.current?.insertBefore(divEl, inputWrapperRef.current);
   }
 
-  const saveInputAllContent = (wrapper: ParentNode, currentPageId: number) => {
+  const saveInputAllContent = (wrapper: HTMLDivElement, currentPageId: number) => {
     const inputElNodeList = wrapper?.querySelectorAll('input') as NodeList;
     if (inputElNodeList) {
       const inputElList = Array.from(inputElNodeList);
