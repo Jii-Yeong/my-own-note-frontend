@@ -1,41 +1,92 @@
 import { createAsyncThunk, createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
-import { PAGE } from "../types/page";
-import { getAllPageList } from '$src/service/page-list.api'
-import { AxiosError } from 'axios';
-import { PAGE_LIST } from "$src/types/page";
+import { PAGE, PAGE_CONTENT, PAGE_LIST } from "$src/types/page";
+import { ValidationErrors } from "../types/root";
+import { addPage, addPageContent, getAllPageList, getPageContent, removePageContentToIndex } from "$src/service/page.api";
+import { Page, PageContentInsertRequest } from "$src/service/types/page";
+import { PAGE_CONTENT_REQUEST, PAGE_STATUE } from "../types/page";
 
-type ValidationErrors = {
-  errorMessage: string;
-  field_errors: Record<string, string>
-}
-
-export const selectAllPageList = createAsyncThunk<
-  Array<PAGE_LIST>,
-  {},
-  {
-    rejectValue: ValidationErrors
-  }
->('pages/select', async (_, { rejectWithValue }) => {
+export const selectAllPageList = createAsyncThunk<PAGE_LIST, number, { rejectValue: ValidationErrors }>('pages/select', async (userInfo, { rejectWithValue }) => {
   try {
-    const { pageList } = await getAllPageList();
+    const pageList = await getAllPageList(userInfo);
     return pageList;
-  } catch (err) {
-    let error: AxiosError<ValidationErrors> = err;
-    if (!error.response) {
+  } catch (err: any) {
+    if (!err.response) {
       throw err;
     }
+    return rejectWithValue(err.response.data);
   }
-  return rejectWithValue(error.response.data);
+})
+
+export const insertPageToUser = createAsyncThunk<PAGE_STATUE, Page, { rejectValue: ValidationErrors }>('pages/insert', async(pageInfo, { rejectWithValue }) => {
+  try {
+    const { pageStatus } = await addPage(pageInfo);
+    return pageStatus;
+  } catch (err: any) {
+    if (!err.response) {
+      throw err;
+    }
+    return rejectWithValue(err.response.data);
+  }
+})
+
+export const selectPageListToPageId = createAsyncThunk<PAGE_CONTENT, PAGE_CONTENT_REQUEST, { rejectValue: ValidationErrors }>('page/select/id', async({pageId, title}, { rejectWithValue }) => {
+  try {
+    const pageContent = await getPageContent(pageId, title);
+    return pageContent;
+  } catch (err: any) {
+    if (!err.response) {
+      throw err;
+    }
+    return rejectWithValue(err.response.data);
+  }
+})
+
+export const insertPageContent = createAsyncThunk<void, PageContentInsertRequest, { rejectValue: ValidationErrors }>('page/insert/content', async({currentPageId, text, index}, { rejectWithValue }) => {
+  try {
+    if (currentPageId && text.length) {
+      await addPageContent(currentPageId, text, index);
+    }
+  } catch (err: any) {
+    if (!err.response) {
+      throw err;
+    }
+    return rejectWithValue(err.response.data);
+  }
+})
+
+export const deletePageContentToIndex = createAsyncThunk<void, number, { rejectValue: ValidationErrors }>('page/delete/index', async(index, { rejectWithValue }) => {
+  try {
+    await removePageContentToIndex(index);
+  } catch (err: any) {
+    if (!err.response) {
+      throw err;
+    }
+    return rejectWithValue(err.response.data);
+  }
 })
 
 const initialState = {
-  pageList: []
+  pageList: {
+    pages: [],
+    count: 0,
+  },
+  currentPageId: 0,
+  currentIndex: 0,
+  pageContent: {},
+  addPageState: {},
+  error: '',
 }
 
 const pageSlice = createSlice<PAGE, SliceCaseReducers<PAGE>, 'pages'>({
   name: 'pages',
   initialState,
-  reducers: {},
+  reducers: {
+    setPageId(state, action) {
+      const { pageId } = action.payload;
+      console.log("pageId", pageId);
+      state.currentPageId = pageId;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(selectAllPageList.fulfilled, (state, { payload }) => {
       state.pageList = payload;
@@ -44,12 +95,23 @@ const pageSlice = createSlice<PAGE, SliceCaseReducers<PAGE>, 'pages'>({
       if (action.payload) {
         state.error = action.payload.errorMessage
       } else {
-        state.error = action.payload.message;
+        state.error = action.error.message;
       }
+    })
+    builder.addCase(insertPageToUser.fulfilled, (state, { payload }) => {
+      state.addPageState = payload;
+    })
+    builder.addCase(selectPageListToPageId.fulfilled, (state, { payload }) => {
+      state.pageContent = payload;
+    })
+    builder.addCase(insertPageContent.fulfilled, (state, { payload }) => {
+    })
+    builder.addCase(deletePageContentToIndex.fulfilled, (state, { payload }) => {
+
     })
   }
 })
 
-export const { setPageList } = pageSlice.actions;
+export const { setPageId } = pageSlice.actions;
 
 export default pageSlice.reducer;
