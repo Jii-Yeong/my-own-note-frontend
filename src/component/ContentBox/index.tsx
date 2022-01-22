@@ -33,7 +33,7 @@ type Props = {
 
 const ContentBox = ({ inputWrapperRef, divRef, pressEnterKey, dragOverElement, dropElement }: Props) => {
   return (
-    <Wrapper ref={divRef}>
+    <Wrapper ref={divRef} id="wrapper">
       <div ref={inputWrapperRef} draggable={true} onDragOver={(e) => dragOverElement(e)}
         onDrop={(e) => dropElement(e)}
       >
