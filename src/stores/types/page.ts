@@ -1,5 +1,8 @@
-import { PAGE_LIST } from "$src/types/page";
+export type PAGE_STATUE = {
+  status: string;
+}
 
-export type PAGE = {
-  pageList: Array<PAGE_LIST>,
+export type PAGE_CONTENT_REQUEST = {
+  pageId: number;
+  title: string;
 }
