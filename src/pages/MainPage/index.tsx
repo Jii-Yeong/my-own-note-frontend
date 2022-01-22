@@ -2,8 +2,9 @@ import MainPanel from "$src/component/MainPanel";
 import SidePanel from "$src/component/SidePanel";
 import React from "react";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import styled from "styled-components";
-import store from "./configureStore";
+import { persistor, store } from "./configureStore";
 
 const Wrapper = styled.div`
   display: flex;
@@ -14,10 +15,12 @@ const Wrapper = styled.div`
 const MainPage = () => {
   return (
     <Provider store={store}>
-      <Wrapper>
-        <SidePanel />
-        <MainPanel />
-      </Wrapper>
+      <PersistGate loading={null} persistor={persistor}>
+        <Wrapper>
+          <SidePanel />
+          <MainPanel />
+       </Wrapper>
+      </PersistGate>
     </Provider>
   )
 }
