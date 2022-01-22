@@ -4,13 +4,7 @@ import { createAsyncThunk, createSlice, SliceCaseReducers } from "@reduxjs/toolk
 import { ValidationErrors } from "../types/root";
 import { USER_INFO } from "../types/user";
 
-export const logInPage = createAsyncThunk<
-USER_INFO,
-LoginInfo,
-{
-  rejectValue: ValidationErrors
-}
->('/userInfo/login', async (info, { rejectWithValue }) => {
+export const logInPage = createAsyncThunk<USER_INFO, LoginInfo, { rejectValue: ValidationErrors }>('/userInfo/login', async (info, { rejectWithValue }) => {
   try {
     const data = await login(info);
     return data;
@@ -23,16 +17,24 @@ LoginInfo,
 })
 
 const initialState = {
-  id: '',
+  id: 0,
   nickname: '',
   pageName: '',
   error: '',
+  isAdditingPage: false,
 }
 
 const userSlice = createSlice<USER_INFO, SliceCaseReducers<USER_INFO>, 'userInfo'>({
   name: 'userInfo',
   initialState,
-  reducers: {},
+  reducers: {
+    setAdditingPageMode(state, _) {
+      state.isAdditingPage = true;
+    },
+    setReadingPageMode(state, _) {
+      state.isAdditingPage = false;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(logInPage.fulfilled, (state, { payload }) => {
       const { id } = payload;
@@ -47,5 +49,7 @@ const userSlice = createSlice<USER_INFO, SliceCaseReducers<USER_INFO>, 'userInfo
     })
   }
 })
+
+export const { setAdditingPageMode, setReadingPageMode } = userSlice.actions;
 
 export default userSlice.reducer;
