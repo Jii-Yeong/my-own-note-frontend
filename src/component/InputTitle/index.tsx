@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -16,10 +16,20 @@ const InputBox = styled.input`
   }
 `
 
-const InputTitle = () => {
+type Props = {
+  title: string;
+}
+
+const InputTitle = ({ title }: Props) => {
+  const inputRef = React.createRef() as React.RefObject<HTMLInputElement>;
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.value = title;
+    }
+  }, [title])
   return (
     <Wrapper>
-      <InputBox placeholder="제목을 입력하세요."/>
+      <InputBox ref={inputRef} placeholder="제목을 입력하세요." />
     </Wrapper>
   )
 }
