@@ -1,9 +1,11 @@
 import { FormikConfig } from "formik";
 import React from "react";
 import styled from "styled-components";
+import Button from "../Button";
 
 type Props = {
   clickClose: () => void;
+  clickCloseIcon: () => void;
   formik: any;
 }
 
@@ -16,7 +18,7 @@ const Wrapper = styled.div`
 
 const ModalWrapper = styled.div`
   width: 30%;
-  height: 65%;
+  height: 75%;
   background-color: #ffffff;
   border: 1px solid #0000002f;
   position: absolute;
@@ -29,7 +31,9 @@ const Title = styled.p`
   padding: 20px;
   margin: 0 auto;
   color: #ffffff;
-  background-color: #6667ab9f;
+  background-color: #6667ab;
+  display: flex;
+  justify-content: space-between;
 `
 
 const Form = styled.form`
@@ -50,19 +54,20 @@ const Input = styled.input`
   border-radius: 3px;
   margin: 25px 0px 0px 50px;
 `
-
-const Button = styled.button`
-  margin: 25px 0px 0px 50px;
+const Cancel = styled.img`
+  width: 6%;
+  height: 6%;
+  cursor: pointer;
 `
 
-const RegisterModal = ({ clickClose, formik }: Props) => {
+const RegisterModal = ({ clickClose, formik, clickCloseIcon }: Props) => {
   return (
     <Wrapper>
       <ModalWrapper>
         <Title>
           회원가입
-          <button onClick={() => clickClose()}>닫기</button>
-          </Title>
+          <Cancel onClick={() => clickCloseIcon()} src="../../images/cancel_icon.svg"/>
+        </Title>
         <Form onSubmit={formik.handleSubmit}>
           <Label>아이디</Label>
           <Input id="id" name="id" type="text" onChange={formik.handleChange} />
@@ -70,7 +75,19 @@ const RegisterModal = ({ clickClose, formik }: Props) => {
           <Input id="password" name="password" type="text" onChange={formik.handleChange} />
           <Label>닉네임</Label>
           <Input id="nickname" name="nickname" type="text" onChange={formik.handleChange} />
-          <Button type="submit">회원가입</Button>
+          <Button name="회원가입" 
+            buttonType="submit"
+            cssObject={{
+              width: 360,
+              height: 40,
+              borderRadius: 4,
+              position: 'absolute',
+              fontSize: 20,
+              top: 80,
+              left: 8,
+            }}
+            buttonClick={clickCloseIcon}
+          />
         </Form>
       </ModalWrapper>
     </Wrapper>
