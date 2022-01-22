@@ -1,4 +1,6 @@
+import { insertPageContent } from "$src/stores/modules/pageSlice";
 import React from "react";
+import { useDispatch } from "react-redux";
 
 export const handleDragStartElement = (divEl: HTMLDivElement) => {
   divEl.setAttribute("id", 'clicked');
@@ -43,6 +45,7 @@ export const handleDropElement = (e: DragEvent | React.DragEvent<HTMLElement>, h
 }
 
 const useDom = () => {
+  const dispatch = useDispatch();
   const createInputEl = (handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, text?: string) => {
     const divEl = document.createElement('div');
     divEl.draggable = true;
@@ -96,10 +99,23 @@ const useDom = () => {
     divRef.current?.insertBefore(divEl, inputWrapperRef.current);
   }
 
+  const saveInputAllContent = (wrapper: ParentNode, currentPageId: number) => {
+    const inputElNodeList = wrapper?.querySelectorAll('input') as NodeList;
+    if (inputElNodeList) {
+      const inputElList = Array.from(inputElNodeList);
+      const textList = inputElList.map(input => (input as HTMLInputElement).value);
+      if (!textList[textList.length - 1]) {
+        textList.pop();
+      }
+      dispatch(insertPageContent({ currentPageId, textList }));
+    }
+  }
+
   return {
     createInputEl,
     insertInpulElToMiddleInput,
     insertInputElToLastInput,
+    saveInputAllContent,
   }
 }
 
