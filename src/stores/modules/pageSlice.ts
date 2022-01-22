@@ -41,10 +41,10 @@ export const selectPageListToPageId = createAsyncThunk<PAGE_CONTENT, PAGE_CONTEN
   }
 })
 
-export const insertPageContent = createAsyncThunk<void, PageContentInsertRequest, { rejectValue: ValidationErrors }>('page/insert/content', async({currentPageId, text, index}, { rejectWithValue }) => {
+export const insertPageContent = createAsyncThunk<void, PageContentInsertRequest, { rejectValue: ValidationErrors }>('page/insert/content', async({currentPageId, textList}, { rejectWithValue }) => {
   try {
-    if (currentPageId && text.length) {
-      await addPageContent(currentPageId, text, index);
+    if (currentPageId && textList.length) {
+      await addPageContent(currentPageId, textList);
     }
   } catch (err: any) {
     if (!err.response) {

@@ -5,6 +5,5 @@ export type Page = {
 
 export type PageContentInsertRequest = {
   currentPageId: number;
-  text: string;
-  index: number;
+  textList: Array<string>;
 }

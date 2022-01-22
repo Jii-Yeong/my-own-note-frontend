@@ -20,13 +20,11 @@ export const getPageContent = (pageId: number, title: string) => {
   return axios.post('/api/page/select/id', data).then(response => response.data);
 }
 
-export const addPageContent = (pageId: number, text: string, index: number) => {
+export const addPageContent = (pageId: number, textList: Array<string>) => {
   const data = {
     pageId: pageId ?? 0,
-    text: text,
-    index: index ?? 0,
+    text: textList,
   }
-  console.log("data",data);
   return axios.post('api/page/insert/content', data).then(response => response.data);
 }
 
