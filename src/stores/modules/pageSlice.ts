@@ -5,7 +5,7 @@ import { addPage, addPageContent, getAllPageList, getPageContent, removePageCont
 import { Page, PageContentInsertRequest } from "$src/service/types/page";
 import { PAGE_CONTENT_REQUEST, PAGE_STATUE } from "../types/page";
 
-export const selectAllPageList = createAsyncThunk<PAGE_LIST, number, { rejectValue: ValidationErrors }>('pages/select', async (userInfo, { rejectWithValue }) => {
+export const selectAllPageList = createAsyncThunk<PAGE_LIST, string, { rejectValue: ValidationErrors }>('pages/select', async (userInfo, { rejectWithValue }) => {
   try {
     const pageList = await getAllPageList(userInfo);
     return pageList;
@@ -81,6 +81,9 @@ const pageSlice = createSlice<PAGE, SliceCaseReducers<PAGE>, 'pages'>({
   name: 'pages',
   initialState,
   reducers: {
+    initPageList(state, _) {
+      state.pageList = initialState.pageList;
+    },
     setPageId(state, action) {
       const { pageId } = action.payload;
       console.log("pageId", pageId);
@@ -112,6 +115,6 @@ const pageSlice = createSlice<PAGE, SliceCaseReducers<PAGE>, 'pages'>({
   }
 })
 
-export const { setPageId } = pageSlice.actions;
+export const { setPageId, initPageList } = pageSlice.actions;
 
 export default pageSlice.reducer;

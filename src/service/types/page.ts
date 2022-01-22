@@ -1,6 +1,6 @@
 export type Page = {
   title: string;
-  userId: number;
+  userId: string;
 }
 
 export type PageContentInsertRequest = {

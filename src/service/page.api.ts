@@ -1,7 +1,7 @@
 import axios from "axios"
 import { Page } from "./types/page"
 
-export const getAllPageList = (userId: number) => {
+export const getAllPageList = (userId: string) => {
   const data = {
     userId: userId
   }

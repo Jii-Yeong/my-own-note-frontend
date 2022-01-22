@@ -17,7 +17,7 @@ export const logInPage = createAsyncThunk<USER_INFO, LoginInfo, { rejectValue: V
 })
 
 const initialState = {
-  id: 0,
+  id: null,
   nickname: '',
   pageName: '',
   error: '',
@@ -33,12 +33,16 @@ const userSlice = createSlice<USER_INFO, SliceCaseReducers<USER_INFO>, 'userInfo
     },
     setReadingPageMode(state, _) {
       state.isAdditingPage = false;
+    },
+    logoutUser(state, _) {
+      state.id = null;
     }
   },
   extraReducers: (builder) => {
     builder.addCase(logInPage.fulfilled, (state, { payload }) => {
-      const { id } = payload;
+      const { id, nickname } = payload;
       state.id = id;
+      state.nickname = nickname
     }),
     builder.addCase(logInPage.rejected, (state, action) => {
       if (action.payload) {
@@ -50,6 +54,6 @@ const userSlice = createSlice<USER_INFO, SliceCaseReducers<USER_INFO>, 'userInfo
   }
 })
 
-export const { setAdditingPageMode, setReadingPageMode } = userSlice.actions;
+export const { setAdditingPageMode, setReadingPageMode, logoutUser } = userSlice.actions;
 
 export default userSlice.reducer;

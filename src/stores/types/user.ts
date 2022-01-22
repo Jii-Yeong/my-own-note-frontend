@@ -1,5 +1,5 @@
 export type USER_INFO = {
-  id: number;
+  id: string | null;
   nickname: string;
   pageName: string;
   isAdditingPage: boolean;
