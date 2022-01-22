@@ -1,8 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import Button from "../Button";
 
 type Props = {
   clickClose: () => void;
+  clickCloseIcon: () => void;
   formik: any;
 }
 
@@ -23,12 +25,14 @@ const ModalWrapper = styled.div`
   left: 35%;
 `
 
-const Title = styled.p`
+const Title = styled.div`
   font-size: 25px;
   padding: 20px;
   margin: 0 auto;
   color: #ffffff;
-  background-color: #6667ab9f;
+  background-color: #6667ab;
+  display: flex;
+  justify-content: space-between;
 `
 
 const Form = styled.form`
@@ -50,24 +54,38 @@ const Input = styled.input`
   margin: 25px 0px 0px 50px;
 `
 
-const Button = styled.button`
-  margin: 25px 0px 0px 50px;
+const Cancel = styled.img`
+  width: 6%;
+  height: 6%;
+  cursor: pointer;
 `
 
-const LoginModal = ({ clickClose, formik }: Props) => {
+const LoginModal = ({ clickClose, clickCloseIcon, formik }: Props) => {
   return (
     <Wrapper>
       <ModalWrapper>
         <Title>
           로그인
-          <button onClick={() => clickClose()}>닫기</button>
-          </Title>
+          <Cancel onClick={() => clickCloseIcon()} src="../../images/cancel_icon.svg"/>
+        </Title>
         <Form onSubmit={formik.handleSubmit}>
           <Label>아이디</Label>
           <Input id="id" name="id" type="text" onChange={formik.handleChange} />
           <Label>비밀번호</Label>
           <Input id="password" name="password" type="text" onChange={formik.handleChange} />
-          <Button type="submit">로그인</Button>
+          <Button buttonType="submit"
+            cssObject={{
+              width: 360,
+              height: 45,
+              borderRadius: 4,
+              fontSize: 20,
+              position: 'absolute',
+              top: 70,
+              left: 8,
+            }}
+            buttonClick={clickClose}
+            name="로그인"
+          />
         </Form>
       </ModalWrapper>
     </Wrapper>
