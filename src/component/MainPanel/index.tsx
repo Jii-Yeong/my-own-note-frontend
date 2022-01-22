@@ -5,14 +5,22 @@ import styled from "styled-components";
 import InputTitle from "../InputTitle";
 import ContentBox from "../ContentBox";
 import TextModal from "../TextModal";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { RootState } from "$src/stores/types/root";
 import useDom, { handleDragOverElement } from "$src/pages/MainPage/hooks/dom";
+import { useFormik } from "formik";
+import { logInPage, logoutUser } from "$src/stores/modules/userSlice";
+import RegisterModal from "../RegisterModal";
+import LoginModal from "../LoginModal";
+import { initPageList } from "$src/stores/modules/pageSlice";
+import Header from "../Header/Header";
 
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
 `
+
+
 let timer: NodeJS.Timeout | null;
 
 const MainPanel = () => {
@@ -49,7 +57,6 @@ const MainPanel = () => {
   const handleInputKeyUp = (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
     const currentTarget = e.target as HTMLInputElement;
     const parentNode = currentTarget.parentNode as HTMLElement;
-    const nextParentNode = parentNode.nextSibling as HTMLElement;
     const nextTarget = parentNode.nextSibling?.firstChild as HTMLElement;
     const prevTarget = parentNode.previousSibling?.firstChild as HTMLElement;
     const wrapper = document.getElementById('wrapper');
@@ -90,6 +97,7 @@ const MainPanel = () => {
       }
     }, 600);
   }
+  const userId = useSelector((state: RootState) => state.userInfo.id, shallowEqual);
 
   const handleClickTextList = (e: React.MouseEvent<HTMLElement>) => {
     const currentTargetCommand = e.currentTarget.dataset.command as string;
@@ -132,10 +140,76 @@ const MainPanel = () => {
     }
     convertInputValue(currentTarget, setStyleObject);
   }
+  const nickname = useSelector((state: RootState) => state.userInfo.nickname, shallowEqual);
+
+  const [isRegisterModalOpen, setRegisterModalOpenState] = useState(false);
+  const [isLoginModalOpen, setLoginModalOpenState] = useState(false);
+  const [isClickedLoginButton, setLoginButtonState] = useState(false);
+  const handleOpenRegisterModal = () => {
+    setRegisterModalOpenState(true);
+  }
+
+  const handleCloseRegisterModal = () => {
+    setRegisterModalOpenState(false);
+  }
+
+  const handleOpenLoginModal = () => {
+    setLoginModalOpenState(true);
+    setLoginButtonState(true);
+  }
+
+  const handleCloseLoginModal = () => {
+    setLoginModalOpenState(false);
+  }
+
+  const handleClickCloseButton = () => {
+    setLoginModalOpenState(false);
+    setLoginButtonState(false);
+    setRegisterModalOpenState(false);
+  }
+
+  const registerFormik = useFormik({
+    initialValues: {
+      id: '',
+      password: '',
+      nickname: '',
+    },
+    onSubmit: values => {
+      console.log("values", values);
+    },
+  });
+
+  const loginFormik = useFormik({
+    initialValues: {
+      id: '',
+      password: ''
+    },
+    onSubmit: async info => {
+      console.log("info", info);
+      dispatch(logInPage(info));
+    }
+  })
+
+  const handleClickLogout = () => {
+    dispatch(logoutUser({}));
+    dispatch(initPageList({}));
+    setLoginButtonState(false);
+  }
 
   return (
     <Wrapper>
       {isOpenTextModal && <TextModal clickTextList={handleClickTextList} />}
+      {isRegisterModalOpen &&
+        <RegisterModal formik={registerFormik} clickClose={handleCloseRegisterModal} clickCloseIcon={handleClickCloseButton} />
+      }
+      {(isLoginModalOpen || (!userId && isClickedLoginButton)) &&
+        <LoginModal formik={loginFormik} clickClose={handleCloseLoginModal} clickCloseIcon={handleClickCloseButton} />
+      }
+      <Header 
+        clickLogout={handleClickLogout}
+        openLoginModal={handleOpenLoginModal}
+        openRegisterModal={handleOpenRegisterModal}
+      />
       <InputTitle title={pageContent.title ?? ''} />
       <ContentBox
         divRef={divRef}
