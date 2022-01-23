@@ -61,16 +61,6 @@ const Header = ({
             }
             buttonType="button"
             buttonClick={openLoginModal} />
-          <Button name="회원가입"
-            cssObject={
-              {
-                width: 100,
-                height: 30,
-                borderRadius: 30,
-              }
-            }
-            buttonType="button"
-            buttonClick={openRegisterModal} />
         </>
       }
     </Wrapper>
