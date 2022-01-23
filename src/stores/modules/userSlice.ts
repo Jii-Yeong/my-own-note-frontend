@@ -31,8 +31,9 @@ const initialState = {
   id: null,
   nickname: '',
   pageName: '',
-  error: '',
   isAdditingPage: false,
+  loginError: '',
+  error: '',
 }
 
 const userSlice = createSlice<USER_INFO, SliceCaseReducers<USER_INFO>, 'userInfo'>({
@@ -51,9 +52,10 @@ const userSlice = createSlice<USER_INFO, SliceCaseReducers<USER_INFO>, 'userInfo
   },
   extraReducers: (builder) => {
     builder.addCase(logInPage.fulfilled, (state, { payload }) => {
-      const { id, nickname } = payload;
+      const { id, nickname, loginError } = payload;
       state.id = id;
-      state.nickname = nickname
+      state.nickname = nickname;
+      state.loginError = loginError;
     }),
     builder.addCase(logInPage.rejected, (state, action) => {
       if (action.payload) {

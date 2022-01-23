@@ -3,5 +3,6 @@ export type USER_INFO = {
   nickname: string;
   pageName: string;
   isAdditingPage: boolean;
+  loginError: string | undefined;
   error: string | undefined;
 }

@@ -39,7 +39,7 @@ const Form = styled.form`
 `
 
 const Label = styled.label`
-  margin: 25px 0px 5px 50px;
+  margin: 50px 0px 5px 50px;
   font-size: 20px;
 `
 
@@ -58,31 +58,46 @@ const Cancel = styled.img`
 `
 const RedirectRegister = styled.p`
   position: absolute;
-  top: 70%;
+  top: 85%;
   left: 25%;
   cursor: pointer;
 `
 
+const AlertMessage = styled.p`
+  color: #ff0000;
+  position: absolute;
+  left: 29%;
+`
+
+const InCorrectMessage = styled.p`
+  color: #ff0000;
+  position: absolute;
+  left: 26%;
+  top: 75%;
+`
+
 type Props = {
-  clickClose: () => void;
-  clickCloseIcon: () => void;
+  clickCloseIcon: (e: React.MouseEvent<HTMLElement>) => void;
   formik: any;
   clickRegister: () => void;
+  isClickSubmitButton: boolean;
 }
 
-const LoginModal = ({ clickClose, clickCloseIcon, formik, clickRegister }: Props) => {
+const LoginModal = ({ clickCloseIcon, formik, clickRegister, isClickSubmitButton }: Props) => {
   return (
     <Wrapper>
       <ModalWrapper>
         <Title>
           로그인
-          <Cancel onClick={() => clickCloseIcon()} src="../../images/cancel_icon.svg"/>
+          <Cancel onClick={(e) => clickCloseIcon(e)} src="../../images/cancel_icon.svg"/>
         </Title>
         <Form onSubmit={formik.handleSubmit}>
           <Label>아이디</Label>
           <Input id="id" name="id" type="text" onChange={formik.handleChange} />
+          {formik.errors['id'] && <AlertMessage>{formik.errors['id']}</AlertMessage>}
           <Label>비밀번호</Label>
-          <Input id="password" name="password" type="text" onChange={formik.handleChange} />
+          <Input id="password" name="password" type="password" onChange={formik.handleChange} />
+          {formik.errors['password'] && <AlertMessage>{formik.errors['password']}</AlertMessage>}
           <Button buttonType="submit"
             cssObject={{
               width: 360,
@@ -93,10 +108,11 @@ const LoginModal = ({ clickClose, clickCloseIcon, formik, clickRegister }: Props
               top: 115,
               left: 8,
             }}
-            buttonClick={clickClose}
+            buttonClick={() => {}}
             name="로그인"
           />
         </Form>
+        {isClickSubmitButton && <InCorrectMessage>아이디 또는 비밀번호가 틀렸습니다.</InCorrectMessage>}
         <RedirectRegister onClick={() => clickRegister()}>아직 아이디가 없으시다면 회원가입</RedirectRegister>
       </ModalWrapper>
     </Wrapper>

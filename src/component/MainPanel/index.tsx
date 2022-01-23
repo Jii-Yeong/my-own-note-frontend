@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 import { SLICE_REGEX } from "$src/util/constant";
 import { convertHtmlElements, convertInputValue } from "$src/util/convert";
 import styled from "styled-components";
@@ -16,6 +16,7 @@ import { deletePage, initCurrentPageId, initPageContent, initPageList, selectAll
 import Header from "../Header/Header";
 import IntroducePanel from "../IntroducePanel";
 import EmptyPagePanel from "../EmptyPagePanel";
+import * as Yup from "yup";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -51,6 +52,7 @@ const MainPanel = () => {
   const divRef = React.createRef() as React.RefObject<HTMLDivElement>;
   const inputWrapperRef = React.createRef() as React.RefObject<HTMLDivElement>;
   const userId = useSelector((state: RootState) => state.userInfo.id, shallowEqual);
+  const loginError = useSelector((state: RootState) => state.userInfo.loginError);
   const [styleObject, setStyleObject] = useState<{ [key: string]: any }>({});
   const [isOpenTextModal, setOpenTextModalState] = useState<boolean>(false);
   const [currentInputEl, setCurrentInputEl] = useState<HTMLInputElement>();
@@ -58,6 +60,7 @@ const MainPanel = () => {
   const [isLoginModalOpen, setLoginModalOpenState] = useState(false);
   const [isClickedLoginButton, setLoginButtonState] = useState(false);
   const [isClickedRegisterButton, setRegisterButtonState] = useState(false);
+  const [isClickSubmitButton, setClickSubmitButtonState] = useState(false);
   const pageContent = useSelector((state: RootState) => state.page.pageContent);
   const currentPageId = useSelector((state: RootState) => state.page.currentPageId);
   const { createInputEl, insertInpulElToMiddleInput, insertInputElToLastInput, saveInputAllContent } = useDom();
@@ -189,10 +192,12 @@ const MainPanel = () => {
     setRegisterButtonState(true);
     setLoginModalOpenState(false);
     setLoginButtonState(false);
+    setClickSubmitButtonState(false);
   }
 
   const handleCloseRegisterModal = () => {
     setRegisterModalOpenState(false);
+    setClickSubmitButtonState(false);
   }
 
   const handleOpenLoginModal = () => {
@@ -201,18 +206,17 @@ const MainPanel = () => {
     setRegisterModalOpenState(false);
     setRegisterButtonState(false);
     setRegisterButtonState(false);
+    setClickSubmitButtonState(false);
   }
 
-  const handleCloseLoginModal = () => {
-    setLoginModalOpenState(false);
-  }
-
-  const handleClickCloseButton = () => {
+  const handleClickCloseButton = (e: React.MouseEvent<HTMLElement>) => {
     setLoginModalOpenState(false);
     setLoginButtonState(false);
     setRegisterButtonState(false);
     setRegisterModalOpenState(false);
     setRegisterButtonState(false);
+    setClickSubmitButtonState(false);
+    registerFormik.handleReset(e);
   }
 
   const registerFormik = useFormik({
@@ -221,19 +225,34 @@ const MainPanel = () => {
       password: '',
       nickname: '',
     },
+    validationSchema: Yup.object().shape({
+      id: Yup.string().min(6, '6자 이상 입력해주세요.').required('아이디를 입력해주세요.'),
+      password: Yup.string().min(8, '8자 이상 입력해주세요.').required('패스워드를 입력해주세요.'),
+      nickname: Yup.string().max(12, '12글자 이하로 입력해주세요.').required('닉네입을 입력해주세요.'),
+    }),
+    enableReinitialize: true,
     onSubmit: async info => {
       await dispatch(registerInPage(info))
       await dispatch(logInPage(info));
+      setRegisterModalOpenState(false);
     },
   });
+
 
   const loginFormik = useFormik({
     initialValues: {
       id: '',
       password: ''
     },
+    validationSchema: Yup.object().shape({
+      id: Yup.string().required('아이디를 입력해주세요.'),
+      password: Yup.string().required('패스워드를 입력해주세요.'),
+    }),
+    enableReinitialize: true,
     onSubmit: async info => {
+      setClickSubmitButtonState(true);
       dispatch(logInPage(info));
+      setLoginModalOpenState(false);
     }
   })
 
@@ -244,6 +263,7 @@ const MainPanel = () => {
     dispatch(initCurrentPageId({}));
     setLoginButtonState(false);
     setRegisterButtonState(false);
+    setClickSubmitButtonState(false);
   }
 
   const deletePageToId = async () => {
@@ -262,7 +282,7 @@ const MainPanel = () => {
         <RegisterModal formik={registerFormik} clickClose={handleCloseRegisterModal} clickCloseIcon={handleClickCloseButton} clickLogin={handleOpenLoginModal} />
       }
       {(isLoginModalOpen || (!userId && isClickedLoginButton)) &&
-        <LoginModal formik={loginFormik} clickClose={handleCloseLoginModal} clickCloseIcon={handleClickCloseButton} clickRegister={handleOpenRegisterModal}/>
+        <LoginModal formik={loginFormik} clickCloseIcon={handleClickCloseButton} clickRegister={handleOpenRegisterModal} isClickSubmitButton={isClickSubmitButton} />
       }
       <Header
         clickLogout={handleClickLogout}

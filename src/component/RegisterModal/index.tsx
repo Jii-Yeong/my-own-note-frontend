@@ -63,11 +63,16 @@ const RedirectLogin = styled.p`
   left: 25%;
   cursor: pointer;
 `
+const AlertMessage = styled.p`
+  color: #ff0000;
+  position: absolute;
+  left: 29%;
+`
 
 type Props = {
-  formik: FormikHandlers;
+  formik: any;
   clickClose: () => void;
-  clickCloseIcon: () => void;
+  clickCloseIcon: (e: React.MouseEvent<HTMLElement>) => void;
   clickLogin: () => void;
 }
 
@@ -77,15 +82,21 @@ const RegisterModal = ({ formik, clickClose, clickCloseIcon, clickLogin }: Props
       <ModalWrapper>
         <Title>
           회원가입
-          <Cancel onClick={() => clickCloseIcon()} src="../../images/cancel_icon.svg" />
+          <Cancel onClick={(e) => clickCloseIcon(e)} src="../../images/cancel_icon.svg" />
         </Title>
         <Form onSubmit={formik.handleSubmit}>
           <Label>아이디</Label>
           <Input id="id" name="id" type="text" onChange={formik.handleChange} />
+          {formik.errors['id'] && <AlertMessage>{formik.errors['id']}</AlertMessage>}
+
           <Label>비밀번호</Label>
-          <Input id="password" name="password" type="text" onChange={formik.handleChange} />
+          <Input id="password" name="password" type="password" onChange={formik.handleChange} />
+          {formik.errors['password'] && <AlertMessage>{formik.errors['password']}</AlertMessage>}
+
           <Label>닉네임</Label>
           <Input id="nickname" name="nickname" type="text" onChange={formik.handleChange} />
+          {formik.errors['nickname'] && <AlertMessage>{formik.errors['nickname']}</AlertMessage>}
+
           <Button name="회원가입"
             buttonType="submit"
             cssObject={{
@@ -97,7 +108,7 @@ const RegisterModal = ({ formik, clickClose, clickCloseIcon, clickLogin }: Props
               top: 110,
               left: 8,
             }}
-            buttonClick={clickClose}
+            buttonClick={() => {}}
           />
         </Form>
         <RedirectLogin onClick={() => { clickLogin() }}>
