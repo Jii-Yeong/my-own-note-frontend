@@ -28,6 +28,6 @@ export const addPageContent = (pageId: number, textList: Array<string>) => {
   return axios.post('api/page/insert/content', data).then(response => response.data);
 }
 
-export const removePageContentToIndex = (index: number) => {
-  return axios.delete(`api/page/delete/index?index=${index}`).then(response => response.data);
+export const removePage = (pageId: number) => {
+  return axios.delete(`api/page/delete?pageId=${pageId}`).then(response => response.data);
 }

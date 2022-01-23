@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
 import { PAGE, PAGE_CONTENT, PAGE_LIST } from "$src/types/page";
 import { ValidationErrors } from "../types/root";
-import { addPage, addPageContent, getAllPageList, getPageContent, removePageContentToIndex } from "$src/service/page.api";
+import { addPage, addPageContent, getAllPageList, getPageContent, removePage } from "$src/service/page.api";
 import { Page, PageContentInsertRequest } from "$src/service/types/page";
 import { PAGE_CONTENT_REQUEST, PAGE_STATUE } from "../types/page";
 
@@ -54,9 +54,9 @@ export const insertPageContent = createAsyncThunk<void, PageContentInsertRequest
   }
 })
 
-export const deletePageContentToIndex = createAsyncThunk<void, number, { rejectValue: ValidationErrors }>('page/delete/index', async(index, { rejectWithValue }) => {
+export const deletePage = createAsyncThunk<void, number, { rejectValue: ValidationErrors }>('page/delete/index', async(pageId, { rejectWithValue }) => {
   try {
-    await removePageContentToIndex(index);
+    await removePage(pageId);
   } catch (err: any) {
     if (!err.response) {
       throw err;
@@ -114,7 +114,7 @@ const pageSlice = createSlice<PAGE, SliceCaseReducers<PAGE>, 'pages'>({
     })
     builder.addCase(insertPageContent.fulfilled, (state, { payload }) => {
     })
-    builder.addCase(deletePageContentToIndex.fulfilled, (state, { payload }) => {
+    builder.addCase(deletePage.fulfilled, (state, { payload }) => {
 
     })
   }
