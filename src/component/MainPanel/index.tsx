@@ -12,7 +12,7 @@ import { useFormik } from "formik";
 import { logInPage, logoutUser, registerInPage } from "$src/stores/modules/userSlice";
 import RegisterModal from "../RegisterModal";
 import LoginModal from "../LoginModal";
-import { initPageList } from "$src/stores/modules/pageSlice";
+import { initCurrentPageId, initPageContent, initPageList } from "$src/stores/modules/pageSlice";
 import Header from "../Header/Header";
 import IntroducePanel from "../IntroducePanel";
 import EmptyPagePanel from "../EmptyPagePanel";
@@ -212,6 +212,8 @@ const MainPanel = () => {
   const handleClickLogout = () => {
     dispatch(logoutUser({}));
     dispatch(initPageList({}));
+    dispatch(initPageContent({}));
+    dispatch(initCurrentPageId({}));
     setLoginButtonState(false);
     setRegisterButtonState(false);
   }
@@ -241,7 +243,7 @@ const MainPanel = () => {
             dragOverElement={handleDragOverElement}
             dropElement={handleDragOverElement} />
         </>
-        : userId ?
+        : userId && !currentPageId ?
         <EmptyPagePanel />
         :
         <IntroducePanel openRegisterModal={handleOpenRegisterModal} />

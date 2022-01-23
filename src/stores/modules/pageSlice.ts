@@ -84,9 +84,14 @@ const pageSlice = createSlice<PAGE, SliceCaseReducers<PAGE>, 'pages'>({
     initPageList(state, _) {
       state.pageList = initialState.pageList;
     },
+    initPageContent(state, _) {
+      state.pageContent = initialState.pageContent;
+    },
+    initCurrentPageId(state, _) {
+      state.currentPageId = 0;
+    },
     setPageId(state, action) {
       const { pageId } = action.payload;
-      console.log("pageId", pageId);
       state.currentPageId = pageId;
     }
   },
@@ -115,6 +120,6 @@ const pageSlice = createSlice<PAGE, SliceCaseReducers<PAGE>, 'pages'>({
   }
 })
 
-export const { setPageId, initPageList } = pageSlice.actions;
+export const { setPageId, initPageList, initPageContent, initCurrentPageId } = pageSlice.actions;
 
 export default pageSlice.reducer;
