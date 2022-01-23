@@ -294,7 +294,7 @@ const MainPanel = () => {
   }
 
   const handleOnInputText = (e: React.FormEvent<HTMLInputElement>) => {
-    e.currentTarget.value = e.currentTarget.value.replace(/[^A-Za-z]/ig, '');
+    e.currentTarget.value = e.currentTarget.value.replace(/[^a-z0-9]/ig, '');
   }
 
   return (
