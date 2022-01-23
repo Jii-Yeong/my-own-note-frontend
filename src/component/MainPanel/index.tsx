@@ -12,7 +12,7 @@ import { useFormik } from "formik";
 import { logInPage, logoutUser, registerInPage } from "$src/stores/modules/userSlice";
 import RegisterModal from "../RegisterModal";
 import LoginModal from "../LoginModal";
-import { initCurrentPageId, initPageContent, initPageList } from "$src/stores/modules/pageSlice";
+import { deletePage, initCurrentPageId, initPageContent, initPageList, selectAllPageList } from "$src/stores/modules/pageSlice";
 import Header from "../Header/Header";
 import IntroducePanel from "../IntroducePanel";
 import EmptyPagePanel from "../EmptyPagePanel";
@@ -24,6 +24,28 @@ const Wrapper = styled.div`
 
 
 let timer: NodeJS.Timeout | null;
+
+const Image = styled.div`
+  opacity: 0.7;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  margin: 45px;
+  background: url(../../images/delete_page_icon.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+  &:hover {
+    width: 36px;
+    height: 36px;
+    background: url(../../images/delete_forever_icon.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+  }
+`
 
 const MainPanel = () => {
   const divRef = React.createRef() as React.RefObject<HTMLDivElement>;
@@ -218,6 +240,16 @@ const MainPanel = () => {
     setRegisterButtonState(false);
   }
 
+  const deletePageToId = async () => {
+    if (currentPageId && userId){
+      console.log("userId", userId);
+      await dispatch(deletePage(currentPageId));
+      await dispatch(selectAllPageList(userId));
+      dispatch(initPageContent({}));
+      dispatch(initCurrentPageId({}));
+    } 
+  }
+
   return (
     <Wrapper>
       {isOpenTextModal && <TextModal clickTextList={handleClickTextList} />}
@@ -235,7 +267,10 @@ const MainPanel = () => {
 
       {userId && currentPageId ?
         <>
+        <div style={{ display: 'flex' }}>
           <InputTitle title={pageContent.title ?? ''} />
+          <Image onClick={() => deletePageToId()}/>
+        </div>
           <ContentBox
             divRef={divRef}
             inputWrapperRef={inputWrapperRef}
