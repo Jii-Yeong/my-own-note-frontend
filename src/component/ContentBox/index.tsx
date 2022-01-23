@@ -2,11 +2,11 @@ import React, { DragEvent, KeyboardEvent, RefObject } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 81%;
+  height: auto;
+  margin: 0 auto;
   & > div {
     width: 80%;
-    margin: 0 auto;
   }
 `
 
@@ -14,7 +14,6 @@ const Input = styled.input`
   display: block;
   height: 30px;
   width: 93%;
-  margin: 0 auto;
   border: none;
   font-size: 15px;
   font-family: 'nanum';

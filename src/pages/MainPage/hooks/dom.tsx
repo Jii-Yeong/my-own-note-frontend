@@ -4,38 +4,36 @@ import { useDispatch } from "react-redux";
 
 export const handleDragStartElement = (e: DragEvent) => {
   const currentTarget = e.target as HTMLElement;
-  console.log("currentTarget", currentTarget);
+  currentTarget.style.backgroundColor = 'transparent';
   currentTarget.setAttribute("id", 'clicked');
 }
 
 export const handleDragOverElement = (e: DragEvent | React.DragEvent<HTMLElement>) => {
   const target = e.target as HTMLElement;
   const firstChild = target.querySelector('input') as HTMLInputElement;
-  console.log(target.tagName);
   if (target && target.tagName === 'DIV' && !firstChild.placeholder) {
     e.preventDefault();
-    target.style.borderBottom = '2px solid #0000005f';
+    target.style.backgroundColor = '#0000005f';
   }
 }
 
 export const handleDragLeaveElement = (e: DragEvent | React.DragEvent<HTMLElement>) => {
   const target = e.target as HTMLElement;
-  target.style.borderBottom = 'none';
+  target.style.backgroundColor = 'transparent';
 }
 
 export const handleDragEndElement = (e: DragEvent | React.DragEvent<HTMLElement>) => {
   const target = e.target as HTMLElement;
-  target.style.borderBottom = 'none';
+  target.style.backgroundColor = 'transparent';
 }
 
 export const handleDropElement = (e: DragEvent | React.DragEvent<HTMLElement>, handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void,
-  currentPageId: number, saveInputAllContent: Function) => {
+  currentPageId: number | undefined, saveInputAllContent: Function) => {
   const target = e.target as HTMLElement;
   const firstChild = target.querySelector('input') as HTMLInputElement;
   const wrapper = document.getElementById('wrapper');
   if (target && target.tagName === 'DIV' && !firstChild.placeholder) {
     e.preventDefault();
-    target.style.borderBottom = '2px solid #0000005f';
   }
   const dragDiv = document.getElementById('clicked');
   const dragCloneDiv = dragDiv?.cloneNode(true) as HTMLElement;
@@ -59,13 +57,14 @@ export const handleDropElement = (e: DragEvent | React.DragEvent<HTMLElement>, h
     }
     dragDiv.replaceWith(targetCloneDiv);
     target.replaceWith(dragCloneDiv);
-    targetCloneDiv.style.borderBottom = 'none';
+    targetCloneDiv.style.backgroundColor = 'transparent';
+    targetCloneDiv.removeAttribute('id');
     dragCloneDiv.removeAttribute('id');
   }
 }
 
 export const addDragEventListener = (divEl: HTMLElement, handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, 
-    wrapper: HTMLElement | null, currentPageId: number, saveInputAllContent: Function) => {
+    wrapper: HTMLElement | null, currentPageId: number | undefined, saveInputAllContent: Function) => {
   divEl.className = 'new-div'
   divEl.style.display = 'flex';
   divEl.style.zIndex = '200';
@@ -86,12 +85,14 @@ export const makeInputElement = (handleInputKeyUp: (e: KeyboardEvent) => void, s
   const inputEl = document.createElement('input');
   inputEl.addEventListener('keyup', handleInputKeyUp);
   inputEl.style.display = 'block';
-  inputEl.style.height = '30px';
+  inputEl.style.height = '40px';
   inputEl.style.width = '93%';
-  inputEl.style.margin = '0px 0px 0px 15px';
+  inputEl.style.margin = '0px 0px 0px 36px';
   inputEl.style.border = 'none';
   inputEl.style.fontSize = '15px';
   inputEl.style.fontFamily = '"nanum"';
+  inputEl.style.backgroundColor = 'transparent';
+  inputEl.style.outline = 'none';
   inputEl.dataset.style = style ?? '';
   if (style === 'h1') {
     inputEl.style.fontSize = '30px';
@@ -116,19 +117,16 @@ const useDom = () => {
   const dispatch = useDispatch();
   const createInputEl = (handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, wrapper?: HTMLDivElement, currentPageId?: number, text?: string, style?: string) => {
     const divEl = document.createElement('div');
-    addDragEventListener(divEl, handleInputKeyUp, wrapper ?? null, currentPageId, saveInputAllContent)
-    const imageEl = document.createElement('img');
-    imageEl.src = '../../images/move_bar.svg';
-    imageEl.style.width = '20px';
-    imageEl.style.height = '20px';
-    imageEl.style.zIndex = '100';
-    imageEl.style.verticalAlign = 'middle';
-    imageEl.draggable = false;
-    imageEl.style.cursor = 'pointer'
-    divEl.appendChild(imageEl);
+    addDragEventListener(divEl, handleInputKeyUp, wrapper ?? null, currentPageId ?? undefined, saveInputAllContent)
+    divEl.style.background = 'url(../../images/move_bar.svg)';
+    divEl.style.backgroundSize = 'contain';
+    divEl.style.backgroundRepeat = 'no-repeat';
+    divEl.style.backgroundColor = 'transparent';
     divEl.style.display = 'flex';
     divEl.style.zIndex = '50';
     divEl.style.alignItems = 'center';
+    divEl.style.height = '30px';
+    divEl.style.margin = '10px 0px 10px 0px';
     divEl.draggable = true;
     const inputEl = makeInputElement(handleInputKeyUp, style ?? '', text ?? '');
     divEl.appendChild(inputEl);
