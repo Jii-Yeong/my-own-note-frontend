@@ -3,8 +3,8 @@ import styled, { css } from "styled-components";
 
 const Wrapper = styled.button<{object: any}>`
   border: 1px solid #6667ab;
-  color: #ffffff;
-  background-color: #6667ab;
+  color: #6667ab;
+  background-color: #ffffff;
   ${({object}) => object && css`font-size: ${object.fontSize ?? 15}px;`}
   ${({object}) => object && css`width: ${object.width}px;`}
   ${({object}) => object && css`height: ${object.height}px;`}
@@ -19,6 +19,7 @@ const Wrapper = styled.button<{object: any}>`
     background-color: #6667ab;
     color: #ffffff;
   }
+  font-weight: bolder;
 `
 
 type Props = {
