@@ -161,6 +161,7 @@ const useDom = () => {
     let oldInputEl = inputWrapperRef.current?.querySelector('input') as HTMLInputElement;
     newInputEl.value = oldInputEl.value;
     oldInputEl.value = '';
+    newInputEl.dataset.style = oldInputEl.dataset.style;
     const changeStyleList = Object.keys(styleObject) as Array<string>;
     const newInputElStyle = newInputEl.style as { [key: string]: any };
     changeStyleList.forEach(style => {

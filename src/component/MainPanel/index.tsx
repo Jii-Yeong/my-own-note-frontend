@@ -160,7 +160,6 @@ const MainPanel = () => {
     const parentNode = currentTarget.parentNode as HTMLElement;
     const prevParentNode = parentNode.previousSibling as HTMLElement;
     const prevTarget = prevParentNode?.querySelector('input') as HTMLElement;
-    console.log("wrapper", wrapper);
     if (e.key === 'Enter') {
       setStyleObject({});
       insertInputElToLastInput(handleInputKeyUp, inputWrapperRef, styleObject, divRef, currentPageId);
@@ -250,8 +249,8 @@ const MainPanel = () => {
     }),
     enableReinitialize: true,
     onSubmit: async info => {
-      setClickSubmitButtonState(true);
       dispatch(logInPage(info));
+      setClickSubmitButtonState(true);
       setLoginModalOpenState(false);
     }
   })
@@ -277,7 +276,7 @@ const MainPanel = () => {
 
   return (
     <Wrapper>
-      {isOpenTextModal && <TextModal clickTextList={handleClickTextList} />}
+      {/* {isOpenTextModal && <TextModal clickTextList={handleClickTextList} />} */}
       {(isRegisterModalOpen || (!userId && isClickedRegisterButton)) &&
         <RegisterModal formik={registerFormik} clickClose={handleCloseRegisterModal} clickCloseIcon={handleClickCloseButton} clickLogin={handleOpenLoginModal} />
       }
