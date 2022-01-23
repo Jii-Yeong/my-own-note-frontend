@@ -1,3 +1,4 @@
+import { IMAGE_URL } from "$config/proxy";
 import React from "react";
 import styled from "styled-components";
 
@@ -37,7 +38,7 @@ const Image = styled.img`
 `
 
 const AddPage = ({ isAdditing, clickAddMode, enterAddPage }: Props) => {
-  const imageSrc = !isAdditing ? '../../images/add_input_icon.svg' : '../../images/cancel_input_icon.svg';
+  const imageSrc = !isAdditing ? `${IMAGE_URL}/build/images/add_input_icon.svg` : `${IMAGE_URL}/build/images/cancel_input_icon.svg`;
   const text = !isAdditing ? '페이지 추가하기' : '닫기';
   return (
     <>

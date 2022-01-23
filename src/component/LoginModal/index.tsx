@@ -92,7 +92,7 @@ const LoginModal = ({ clickCloseIcon, formik, clickRegister, isLoginModalOpen, i
       <ModalWrapper>
         <Title>
           로그인
-          <Cancel onClick={(e) => clickCloseIcon(e)} src="../../images/cancel_icon.svg"/>
+          <Cancel onClick={(e) => clickCloseIcon(e)} src="../build/images/cancel_icon.svg"/>
         </Title>
         <Form onSubmit={formik.handleSubmit}>
           <Label>아이디</Label>

@@ -1,3 +1,4 @@
+import { IMAGE_URL } from "$config/proxy";
 import { insertPageContent } from "$src/stores/modules/pageSlice";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -143,7 +144,7 @@ const useDom = () => {
   ) => {
     const divEl = document.createElement('div');
     addDragEventListener(divEl, handleInputKeyUp, wrapper ?? null, currentPageId ?? undefined, saveInputAllContent, handleChangeToCommand)
-    divEl.style.background = 'url(../../images/move_bar.svg)';
+    divEl.style.background = `url(${IMAGE_URL}/build/images/move_bar.svg)`;
     divEl.style.backgroundSize = 'contain';
     divEl.style.backgroundRepeat = 'no-repeat';
     divEl.style.backgroundColor = 'transparent';

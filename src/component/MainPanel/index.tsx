@@ -17,6 +17,7 @@ import IntroducePanel from "../IntroducePanel";
 import EmptyPagePanel from "../EmptyPagePanel";
 import * as Yup from "yup";
 import { useAppDispatch } from "$src/pages/MainPage/configureStore";
+import { IMAGE_URL } from "$config/proxy";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -44,7 +45,7 @@ const Image = styled.div`
   height: 35px;
   cursor: pointer;
   margin: 25px 25px 25px 25px;
-  background: url(../../images/delete_page_icon.svg);
+  background: url(${IMAGE_URL}/build/images/delete_page_icon.svg);
   background-size: contain;
   background-repeat: no-repeat;
   background-color: transparent;
@@ -52,7 +53,7 @@ const Image = styled.div`
   &:hover {
     width: 35px;
     height: 35px;
-    background: url(../../images/delete_forever_icon.svg);
+    background: url(${IMAGE_URL}/build/images/delete_forever_icon.svg);
     background-size: contain;
     background-repeat: no-repeat;
     background-color: transparent;

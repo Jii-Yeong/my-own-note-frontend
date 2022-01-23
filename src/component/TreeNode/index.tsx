@@ -20,7 +20,7 @@ const TreeList = styled.div`
 const TriagleButton = styled.button<{ isOpen: boolean }>`
   height: 16px;
   margin: 13px 0px 0px 0px;
-  background: url(${IMAGE_URL}/images/polygon.svg);
+  background: url(${IMAGE_URL}/build/images/polygon.svg);
   background-size: contain;
   background-repeat: no-repeat;
   background-color: transparent;

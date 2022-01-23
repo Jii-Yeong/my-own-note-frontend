@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import PageRouter from './pages/PageRouter';
+import MainPage from './pages/MainPage';
+import '../public/main.css';
 
-ReactDom.render(<PageRouter/ >, document.getElementById('container'));
+ReactDom.render(<MainPage/ >, document.getElementById('container'));
