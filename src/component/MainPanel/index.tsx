@@ -93,7 +93,7 @@ const MainPanel = () => {
         wrapper?.removeChild(div);
       });
       pageContent.text.forEach((content: { [key: string]: any }) => {
-        const divEl = createInputEl(handleInputKeyUp, wrapper, currentPageId, content.text, content.style) as HTMLElement;
+        const divEl = createInputEl(handleInputKeyUp, handleChangeToCommand, wrapper, currentPageId, content.text, content.style) as HTMLElement;
         wrapper?.prepend(divEl);
       });
     }
@@ -109,7 +109,7 @@ const MainPanel = () => {
     const wrapper = document.getElementById('wrapper') as HTMLDivElement;
 
     if (e.key === 'Enter') {
-      insertInpulElToMiddleInput(handleInputKeyUp, parentNode);
+      insertInpulElToMiddleInput(handleInputKeyUp, parentNode, handleChangeToCommand);
     }
 
     if (e.key === 'ArrowDown') {
@@ -139,13 +139,16 @@ const MainPanel = () => {
       clearTimeout(timer);
     }
 
-    convertInputValue(currentTarget, setStyleObject);
-
     timer = setTimeout(() => {
       if (wrapper) {
         saveInputAllContent(wrapper, currentPageId);
       }
     }, 600);
+  }
+
+  const handleChangeToCommand = (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
+    const currentTarget = e.target as HTMLInputElement;
+    convertInputValue(currentTarget, setStyleObject);
   }
 
   const handleClickTextList = (e: React.MouseEvent<HTMLElement>) => {
@@ -173,7 +176,7 @@ const MainPanel = () => {
     const prevTarget = prevParentNode?.querySelector('input') as HTMLElement;
     if (e.key === 'Enter') {
       setStyleObject({});
-      insertInputElToLastInput(handleInputKeyUp, inputWrapperRef, styleObject, divRef, currentPageId);
+      insertInputElToLastInput(handleInputKeyUp, inputWrapperRef, styleObject, divRef, currentPageId, handleChangeToCommand);
       if (wrapper) {
         saveInputAllContent(wrapper, currentPageId);
       }

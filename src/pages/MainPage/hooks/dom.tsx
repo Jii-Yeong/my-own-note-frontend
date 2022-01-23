@@ -27,8 +27,13 @@ export const handleDragEndElement = (e: DragEvent | React.DragEvent<HTMLElement>
   target.style.backgroundColor = 'transparent';
 }
 
-export const handleDropElement = (e: DragEvent | React.DragEvent<HTMLElement>, handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void,
-  currentPageId: number | undefined, saveInputAllContent: Function) => {
+export const handleDropElement = (
+  e: DragEvent | React.DragEvent<HTMLElement>, 
+  handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void,
+  currentPageId: number | undefined, 
+  saveInputAllContent: Function,
+  handleChangeToCommand: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void,
+  ) => {
   const target = e.target as HTMLElement;
   const firstChild = target.querySelector('input') as HTMLInputElement;
   const wrapper = document.getElementById('wrapper');
@@ -40,8 +45,8 @@ export const handleDropElement = (e: DragEvent | React.DragEvent<HTMLElement>, h
   const targetCloneDiv = target?.cloneNode(true) as HTMLElement;
 
   if (wrapper) {
-    addDragEventListener(dragCloneDiv, handleInputKeyUp, wrapper, currentPageId, saveInputAllContent)
-    addDragEventListener(targetCloneDiv, handleInputKeyUp, wrapper, currentPageId, saveInputAllContent)
+    addDragEventListener(dragCloneDiv, handleInputKeyUp, wrapper, currentPageId, saveInputAllContent, handleChangeToCommand)
+    addDragEventListener(targetCloneDiv, handleInputKeyUp, wrapper, currentPageId, saveInputAllContent, handleChangeToCommand)
   }
   if (dragCloneDiv && dragDiv) {
     const dragCloneInput = dragCloneDiv.querySelector('input');
@@ -50,9 +55,11 @@ export const handleDropElement = (e: DragEvent | React.DragEvent<HTMLElement>, h
     const targetInputStyle = target.querySelector('input')?.dataset.style;
     console.log("dragInputStyle", dragInputStyle, targetInputStyle);
     if (dragCloneInput && targetCloneInput) {
-      dragCloneInput.addEventListener('keyup', handleInputKeyUp);
+      dragCloneInput.addEventListener('keydown', handleInputKeyUp);
+      dragCloneInput.addEventListener('keyup', handleChangeToCommand);
       dragCloneInput.dataset.style = dragInputStyle;
-      targetCloneInput.addEventListener('keyup', handleInputKeyUp);
+      targetCloneInput.addEventListener('keydown', handleInputKeyUp);
+      targetCloneInput.addEventListener('keyup', handleChangeToCommand);
       targetCloneInput.dataset.style = targetInputStyle;
     }
     dragDiv.replaceWith(targetCloneDiv);
@@ -63,8 +70,14 @@ export const handleDropElement = (e: DragEvent | React.DragEvent<HTMLElement>, h
   }
 }
 
-export const addDragEventListener = (divEl: HTMLElement, handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, 
-    wrapper: HTMLElement | null, currentPageId: number | undefined, saveInputAllContent: Function) => {
+export const addDragEventListener = (
+    divEl: HTMLElement, 
+    handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, 
+    wrapper: HTMLElement | null, 
+    currentPageId: number | undefined, 
+    saveInputAllContent: Function,
+    handleChangeToCommand: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, 
+  ) => {
   divEl.className = 'new-div'
   divEl.style.display = 'flex';
   divEl.style.zIndex = '200';
@@ -73,7 +86,7 @@ export const addDragEventListener = (divEl: HTMLElement, handleInputKeyUp: (e: K
   divEl.addEventListener('dragend', handleDragEndElement);
   divEl.addEventListener('dragleave', handleDragLeaveElement);
   divEl.addEventListener('drop', (e: DragEvent) => {
-    handleDropElement(e, handleInputKeyUp, currentPageId, saveInputAllContent);
+    handleDropElement(e, handleInputKeyUp, currentPageId, saveInputAllContent, handleChangeToCommand);
     if (wrapper && currentPageId) {
       saveInputAllContent(wrapper, currentPageId);
     }
@@ -81,9 +94,14 @@ export const addDragEventListener = (divEl: HTMLElement, handleInputKeyUp: (e: K
   });
 }
 
-export const makeInputElement = (handleInputKeyUp: (e: KeyboardEvent) => void, style: string, text: string) => {
+export const makeInputElement = (
+    handleInputKeyUp: (e: KeyboardEvent) => void, 
+    style: string, text: string,
+    handleChangeToCommand: (e: KeyboardEvent) => void, 
+  ) => {
   const inputEl = document.createElement('input');
-  inputEl.addEventListener('keyup', handleInputKeyUp);
+  inputEl.addEventListener('keydown', handleInputKeyUp);
+  inputEl.addEventListener('keyup', handleChangeToCommand);
   inputEl.style.display = 'block';
   inputEl.style.height = '40px';
   inputEl.style.width = '93%';
@@ -115,9 +133,16 @@ export const makeInputElement = (handleInputKeyUp: (e: KeyboardEvent) => void, s
 
 const useDom = () => {
   const dispatch = useDispatch();
-  const createInputEl = (handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, wrapper?: HTMLDivElement, currentPageId?: number, text?: string, style?: string) => {
+  const createInputEl = (
+    handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void,
+    handleChangeToCommand: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void,
+    wrapper?: HTMLDivElement, 
+    currentPageId?: number, 
+    text?: string, 
+    style?: string,
+  ) => {
     const divEl = document.createElement('div');
-    addDragEventListener(divEl, handleInputKeyUp, wrapper ?? null, currentPageId ?? undefined, saveInputAllContent)
+    addDragEventListener(divEl, handleInputKeyUp, wrapper ?? null, currentPageId ?? undefined, saveInputAllContent, handleChangeToCommand)
     divEl.style.background = 'url(../../images/move_bar.svg)';
     divEl.style.backgroundSize = 'contain';
     divEl.style.backgroundRepeat = 'no-repeat';
@@ -128,13 +153,16 @@ const useDom = () => {
     divEl.style.height = '30px';
     divEl.style.margin = '10px 0px 10px 0px';
     divEl.draggable = true;
-    const inputEl = makeInputElement(handleInputKeyUp, style ?? '', text ?? '');
+    const inputEl = makeInputElement(handleInputKeyUp, style ?? '', text ?? '', handleChangeToCommand);
     divEl.appendChild(inputEl);
     return divEl;
   }
 
-  const insertInpulElToMiddleInput = (handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, parentNode: HTMLElement) => {
-    const divEl = createInputEl(handleInputKeyUp);
+  const insertInpulElToMiddleInput = (handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, 
+  parentNode: HTMLElement,
+  handleChangeToCommand: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void,
+  ) => {
+    const divEl = createInputEl(handleInputKeyUp, handleChangeToCommand);
     divEl.style.display = 'flex';
     divEl.draggable = true;
     divEl.className = 'new-div';
@@ -147,11 +175,13 @@ const useDom = () => {
     inputWrapperRef: React.RefObject<HTMLDivElement>,
     styleObject: any,
     divRef: React.RefObject<HTMLDivElement>,
-    currentPageId: number) => {
+    currentPageId: number,
+    handleChangeToCommand: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void,
+    ) => {
     const wrapper = document.getElementById('wrapper');
-    const divEl = createInputEl(handleInputKeyUp);
+    const divEl = createInputEl(handleInputKeyUp, handleChangeToCommand);
     if (wrapper) {
-      addDragEventListener(divEl, handleInputKeyUp, wrapper, currentPageId, saveInputAllContent);
+      addDragEventListener(divEl, handleInputKeyUp, wrapper, currentPageId, saveInputAllContent, handleChangeToCommand);
     }
     let newInputEl = divEl.querySelector('input') as HTMLInputElement
     let oldInputEl = inputWrapperRef.current?.querySelector('input') as HTMLInputElement;

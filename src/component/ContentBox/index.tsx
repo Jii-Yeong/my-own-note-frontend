@@ -36,7 +36,7 @@ const ContentBox = ({ inputWrapperRef, divRef, pressEnterKey, dragOverElement, d
       <div ref={inputWrapperRef} draggable={true} onDragOver={(e) => dragOverElement(e)}
         onDrop={(e) => dropElement(e)}
       >
-        <Input type="text" onKeyUp={(e) => pressEnterKey(e)} placeholder="글 작성하기" />
+        <Input type="text" onKeyDown={(e) => pressEnterKey(e)} placeholder="글 작성하기" />
       </div>
     </Wrapper >
   )
