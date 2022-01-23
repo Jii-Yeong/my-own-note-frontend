@@ -74,9 +74,10 @@ type Props = {
   clickClose: () => void;
   clickCloseIcon: (e: React.MouseEvent<HTMLElement>) => void;
   clickLogin: () => void;
+  onInputText: (e: React.FormEvent<HTMLInputElement>) => void;
 }
 
-const RegisterModal = ({ formik, clickClose, clickCloseIcon, clickLogin }: Props) => {
+const RegisterModal = ({ formik, clickClose, clickCloseIcon, clickLogin, onInputText }: Props) => {
   return (
     <Wrapper>
       <ModalWrapper>
@@ -86,7 +87,7 @@ const RegisterModal = ({ formik, clickClose, clickCloseIcon, clickLogin }: Props
         </Title>
         <Form onSubmit={formik.handleSubmit}>
           <Label>아이디</Label>
-          <Input id="id" name="id" type="text" onChange={formik.handleChange} />
+          <Input id="id" name="id" type="text" onChange={formik.handleChange} onInput={(e) => onInputText(e)} />
           {formik.errors['id'] && <AlertMessage>{formik.errors['id']}</AlertMessage>}
 
           <Label>비밀번호</Label>

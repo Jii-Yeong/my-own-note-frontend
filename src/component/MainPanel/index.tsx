@@ -4,8 +4,7 @@ import { convertHtmlElements, convertInputValue } from "$src/util/convert";
 import styled from "styled-components";
 import InputTitle from "../InputTitle";
 import ContentBox from "../ContentBox";
-import TextModal from "../TextModal";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
 import { RootState } from "$src/stores/types/root";
 import useDom, { handleDragOverElement } from "$src/pages/MainPage/hooks/dom";
 import { useFormik } from "formik";
@@ -17,7 +16,7 @@ import Header from "../Header/Header";
 import IntroducePanel from "../IntroducePanel";
 import EmptyPagePanel from "../EmptyPagePanel";
 import * as Yup from "yup";
-import { store, useAppDispatch } from "$src/pages/MainPage/configureStore";
+import { useAppDispatch } from "$src/pages/MainPage/configureStore";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -65,7 +64,6 @@ const MainPanel = () => {
   const divRef = React.createRef() as React.RefObject<HTMLDivElement>;
   const inputWrapperRef = React.createRef() as React.RefObject<HTMLDivElement>;
   const userId = useSelector((state: RootState) => state.userInfo.id, shallowEqual);
-  const loginError = useSelector((state: RootState) => state.userInfo.loginError);
   const [styleObject, setStyleObject] = useState<{ [key: string]: any }>({});
   const [isOpenTextModal, setOpenTextModalState] = useState<boolean>(false);
   const [currentInputEl, setCurrentInputEl] = useState<HTMLInputElement>();
@@ -295,14 +293,26 @@ const MainPanel = () => {
     } 
   }
 
+  const handleOnInputText = (e: React.FormEvent<HTMLInputElement>) => {
+    e.currentTarget.value = e.currentTarget.value.replace(/[^A-Za-z]/ig, '');
+  }
+
   return (
     <Wrapper>
       {/* {isOpenTextModal && <TextModal clickTextList={handleClickTextList} />} */}
       {(isRegisterModalOpen || (!userId && isClickedRegisterButton)) &&
-        <RegisterModal formik={registerFormik} clickClose={handleCloseRegisterModal} clickCloseIcon={handleClickCloseButton} clickLogin={handleOpenLoginModal} />
+        <RegisterModal formik={registerFormik} clickClose={handleCloseRegisterModal} clickCloseIcon={handleClickCloseButton} clickLogin={handleOpenLoginModal} onInputText={handleOnInputText} />
       }
       {(isLoginModalOpen || (!userId && isClickedLoginButton)) &&
-        <LoginModal formik={loginFormik} clickCloseIcon={handleClickCloseButton} clickRegister={handleOpenRegisterModal} isLoginModalOpen={isLoginModalOpen} isSuccessLogin={isSuccessLogin} isClickSubmitButton={isClickSubmitButton}/>
+        <LoginModal 
+          formik={loginFormik} 
+          clickCloseIcon={handleClickCloseButton}
+          clickRegister={handleOpenRegisterModal}
+          isLoginModalOpen={isLoginModalOpen}
+          isSuccessLogin={isSuccessLogin}
+          isClickSubmitButton={isClickSubmitButton}
+          onInputText={handleOnInputText}
+          />
       }
       <Header
         clickLogout={handleClickLogout}

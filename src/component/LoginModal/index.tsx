@@ -83,9 +83,10 @@ type Props = {
   isLoginModalOpen: boolean;
   isClickSubmitButton: boolean;
   isSuccessLogin: boolean;
+  onInputText: (e: React.FormEvent<HTMLInputElement>) => void;
 }
 
-const LoginModal = ({ clickCloseIcon, formik, clickRegister, isLoginModalOpen, isClickSubmitButton, isSuccessLogin }: Props) => {
+const LoginModal = ({ clickCloseIcon, formik, clickRegister, isLoginModalOpen, isClickSubmitButton, isSuccessLogin, onInputText }: Props) => {
   return (
     <Wrapper>
       <ModalWrapper>
@@ -95,7 +96,7 @@ const LoginModal = ({ clickCloseIcon, formik, clickRegister, isLoginModalOpen, i
         </Title>
         <Form onSubmit={formik.handleSubmit}>
           <Label>아이디</Label>
-          <Input id="id" name="id" type="text" onChange={formik.handleChange} />
+          <Input id="id" name="id" type="text" onChange={formik.handleChange} onInput={(e) => onInputText(e)}/>
           {formik.errors['id'] && <AlertMessage>{formik.errors['id']}</AlertMessage>}
           <Label>비밀번호</Label>
           <Input id="password" name="password" type="password" onChange={formik.handleChange} />
