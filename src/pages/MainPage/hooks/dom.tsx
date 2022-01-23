@@ -132,10 +132,8 @@ const useDom = () => {
     divEl.style.zIndex = '50';
     divEl.style.alignItems = 'center';
     divEl.draggable = true;
-    if (style && text) {
-      const inputEl = makeInputElement(handleInputKeyUp, style, text);
-      divEl.appendChild(inputEl);
-    }
+    const inputEl = makeInputElement(handleInputKeyUp, style ?? '', text ?? '');
+    divEl.appendChild(inputEl);
     return divEl;
   }
 
