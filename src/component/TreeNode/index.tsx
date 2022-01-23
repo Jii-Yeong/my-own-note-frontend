@@ -49,15 +49,15 @@ const TreeNode = ({ pageList, selectedPageList, clickToggleDepths, clickPageTitl
         return (
           <TreeWrapper key={`${page.pageId}-${index}`}>
             <TriagleButton onClick={() => clickToggleDepths(page.pageId)} isOpen={isOpen(page.pageId)}/>
-            <TreeList>
-              <div onClick={() => clickPageTitle(page.pageId, page.pageName)}>{page.pageName}</div>
+            <TreeList onClick={() => clickPageTitle(page.pageId, page.pageName)}>
+              <div>{page.pageName}</div>
               {pageList.filter(pg => page.pageId === pg.parentPageId).map((pg, idx) => {
                 if (pg.isSelected)
                 return (
                   <TreeWrapper key={`${pg.pageId}-${idx}`}>
                     <TriagleButton onClick={() => clickToggleDepths(pg.pageId)} isOpen={isOpen(pg.pageId)}/>
-                    <TreeList>
-                      <div onClick={() => clickPageTitle(pg.pageId, pg.pageName)}>
+                    <TreeList onClick={() => clickPageTitle(pg.pageId, pg.pageName)}>
+                      <div>
                         {pg.pageName}
                       </div>
                       {pageList.filter(p => pg.pageId === p.parentPageId).map((p, i) => {
@@ -65,8 +65,8 @@ const TreeNode = ({ pageList, selectedPageList, clickToggleDepths, clickPageTitl
                         return (
                           <TreeWrapper key={`${p.pageId}-${i}`}>
                             <TriagleButton onClick={() => clickToggleDepths(p.pageId)} isOpen={isOpen(p.pageId)}/>
-                            <TreeList>
-                              <div onClick={() => clickPageTitle(p.pageId, p.pageName)}>{p.pageName}</div>
+                            <TreeList onClick={() => clickPageTitle(p.pageId, p.pageName)}>
+                              <div>{p.pageName}</div>
                             </TreeList>
                           </TreeWrapper>
                         )
