@@ -27,16 +27,20 @@ let timer: NodeJS.Timeout | null;
 const MainPanel = () => {
   const divRef = React.createRef() as React.RefObject<HTMLDivElement>;
   const inputWrapperRef = React.createRef() as React.RefObject<HTMLDivElement>;
+  const userId = useSelector((state: RootState) => state.userInfo.id, shallowEqual);
   const [styleObject, setStyleObject] = useState<{ [key: string]: any }>({});
   const [isOpenTextModal, setOpenTextModalState] = useState<boolean>(false);
   const [currentInputEl, setCurrentInputEl] = useState<HTMLInputElement>();
+  const [isRegisterModalOpen, setRegisterModalOpenState] = useState(false);
+  const [isLoginModalOpen, setLoginModalOpenState] = useState(false);
+  const [isClickedLoginButton, setLoginButtonState] = useState(false);
   const pageContent = useSelector((state: RootState) => state.page.pageContent);
   const currentPageId = useSelector((state: RootState) => state.page.currentPageId);
   const { createInputEl, insertInpulElToMiddleInput, insertInputElToLastInput, saveInputAllContent } = useDom();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const startInput = inputWrapperRef.current?.firstChild as HTMLElement;
+    const startInput = inputWrapperRef.current?.querySelector('input') as HTMLElement;
     if (currentPageId) {
       startInput.focus();
     }
@@ -60,8 +64,10 @@ const MainPanel = () => {
   const handleInputKeyUp = (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
     const currentTarget = e.target as HTMLInputElement;
     const parentNode = currentTarget.parentNode as HTMLElement;
-    const nextTarget = parentNode.nextSibling?.firstChild as HTMLElement;
-    const prevTarget = parentNode.previousSibling?.firstChild as HTMLElement;
+    const nextParetNode = parentNode.nextSibling as HTMLElement;
+    const prevParentNode = parentNode.previousSibling as HTMLElement;
+    const nextTarget = nextParetNode?.querySelector('input') as HTMLElement;
+    const prevTarget = prevParentNode?.querySelector('input') as HTMLElement;
     const wrapper = document.getElementById('wrapper') as HTMLDivElement;
 
     if (e.key === 'Enter') {
@@ -77,7 +83,8 @@ const MainPanel = () => {
     }
 
     if (e.key === '/') {
-      const windowSelection = window.getSelection()?.focusNode?.firstChild as HTMLInputElement;
+      const focusNode = window.getSelection()?.focusNode as HTMLElement;
+      const windowSelection = focusNode?.querySelector('input') as HTMLInputElement;
       setCurrentInputEl(windowSelection);
       setOpenTextModalState(true);
     }
@@ -94,13 +101,14 @@ const MainPanel = () => {
       clearTimeout(timer);
     }
 
+    convertInputValue(currentTarget, setStyleObject);
+
     timer = setTimeout(() => {
       if (wrapper) {
         saveInputAllContent(wrapper, currentPageId);
       }
     }, 600);
   }
-  const userId = useSelector((state: RootState) => state.userInfo.id, shallowEqual);
 
   const handleClickTextList = (e: React.MouseEvent<HTMLElement>) => {
     const currentTargetCommand = e.currentTarget.dataset.command as string;
@@ -125,28 +133,26 @@ const MainPanel = () => {
     console.log("wrapper", wrapper);
     if (e.key === 'Enter') {
       setStyleObject({});
-      insertInputElToLastInput(handleInputKeyUp, inputWrapperRef, styleObject, divRef);
+      insertInputElToLastInput(handleInputKeyUp, inputWrapperRef, styleObject, divRef, currentPageId);
       if (wrapper) {
         saveInputAllContent(wrapper, currentPageId);
       }
     }
 
     if (e.key === 'ArrowUp') {
-      const prevInputEl = currentTarget?.parentNode?.previousSibling?.firstChild as HTMLElement;
+      const prevParentNode = currentTarget?.parentNode?.previousSibling as HTMLElement;
+      const prevInputEl = prevParentNode?.querySelector('input') as HTMLElement;
       prevInputEl.focus()
     }
 
     if (e.key === '/') {
-      const windowSelection = window.getSelection()?.focusNode?.firstChild as HTMLInputElement;
+      const focusNode = window.getSelection()?.focusNode as HTMLElement;
+      const windowSelection = focusNode.querySelector('input') as HTMLInputElement;
       setCurrentInputEl(windowSelection);
       setOpenTextModalState(true);
     }
     convertInputValue(currentTarget, setStyleObject);
   }
-
-  const [isRegisterModalOpen, setRegisterModalOpenState] = useState(false);
-  const [isLoginModalOpen, setLoginModalOpenState] = useState(false);
-  const [isClickedLoginButton, setLoginButtonState] = useState(false);
 
   const handleOpenRegisterModal = () => {
     setRegisterModalOpenState(true);
