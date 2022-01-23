@@ -152,8 +152,11 @@ const MainPanel = () => {
   }
 
   const handlePressEnterKey = (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => {
-    const currentTarget = e.target as HTMLInputElement;
     const wrapper = document.getElementById('wrapper') as HTMLDivElement;
+    const currentTarget = e.target as HTMLInputElement;
+    const parentNode = currentTarget.parentNode as HTMLElement;
+    const prevParentNode = parentNode.previousSibling as HTMLElement;
+    const prevTarget = prevParentNode?.querySelector('input') as HTMLElement;
     console.log("wrapper", wrapper);
     if (e.key === 'Enter') {
       setStyleObject({});
@@ -174,6 +177,9 @@ const MainPanel = () => {
       const windowSelection = focusNode.querySelector('input') as HTMLInputElement;
       setCurrentInputEl(windowSelection);
       setOpenTextModalState(true);
+    }
+    if (e.key === 'Backspace' && currentTarget.selectionStart === 0 && prevTarget) {
+      prevTarget.focus();
     }
     convertInputValue(currentTarget, setStyleObject);
   }
