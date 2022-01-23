@@ -21,7 +21,7 @@ const Nickname = styled.p`
 `
 
 type Props = {
-  clickLogout: () => void;
+  clickLogout: (e?: React.MouseEvent<HTMLElement>) => void;
   openLoginModal: () => void;
   openRegisterModal: () => void;
 }

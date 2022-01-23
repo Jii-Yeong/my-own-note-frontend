@@ -53,9 +53,15 @@ const userSlice = createSlice<USER_INFO, SliceCaseReducers<USER_INFO>, 'userInfo
   extraReducers: (builder) => {
     builder.addCase(logInPage.fulfilled, (state, { payload }) => {
       const { id, nickname, loginError } = payload;
-      state.id = id;
-      state.nickname = nickname;
-      state.loginError = loginError;
+      if (id && nickname) {
+        state.id = id;
+        state.nickname = nickname;
+        state.loginError = '';
+      } else {
+        state.id = '';
+        state.nickname = '';
+        state.loginError = loginError;
+      }
     }),
     builder.addCase(logInPage.rejected, (state, action) => {
       if (action.payload) {

@@ -80,10 +80,12 @@ type Props = {
   clickCloseIcon: (e: React.MouseEvent<HTMLElement>) => void;
   formik: any;
   clickRegister: () => void;
+  isLoginModalOpen: boolean;
   isClickSubmitButton: boolean;
+  isSuccessLogin: boolean;
 }
 
-const LoginModal = ({ clickCloseIcon, formik, clickRegister, isClickSubmitButton }: Props) => {
+const LoginModal = ({ clickCloseIcon, formik, clickRegister, isLoginModalOpen, isClickSubmitButton, isSuccessLogin }: Props) => {
   return (
     <Wrapper>
       <ModalWrapper>
@@ -112,7 +114,7 @@ const LoginModal = ({ clickCloseIcon, formik, clickRegister, isClickSubmitButton
             name="로그인"
           />
         </Form>
-        {isClickSubmitButton && <InCorrectMessage>아이디 또는 비밀번호가 틀렸습니다.</InCorrectMessage>}
+        {(!isSuccessLogin && isLoginModalOpen && isClickSubmitButton) && <InCorrectMessage>아이디 또는 비밀번호가 틀렸습니다.</InCorrectMessage>}
         <RedirectRegister onClick={() => clickRegister()}>아직 아이디가 없으시다면 회원가입</RedirectRegister>
       </ModalWrapper>
     </Wrapper>

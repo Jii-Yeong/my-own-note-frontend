@@ -24,7 +24,7 @@ const Wrapper = styled.button<{object: any}>`
 
 type Props = {
   name: string;
-  buttonClick: () => void;
+  buttonClick: (e?: React.MouseEvent<HTMLElement>) => void;
   cssObject: {[key: string]: any};
   buttonType: 'button' | 'submit' | 'reset' | undefined;
 }
@@ -33,7 +33,7 @@ type Props = {
 const Button = ({ name, buttonClick, cssObject, buttonType }: Props) => {
   console.log("cssObject", buttonType);
   return (
-    <Wrapper onClick={() => buttonClick()} object={cssObject} type={buttonType ?? 'button'}>
+    <Wrapper onClick={(e) => buttonClick(e)} object={cssObject} type={buttonType ?? 'button'}>
       {name}
     </Wrapper>
   )

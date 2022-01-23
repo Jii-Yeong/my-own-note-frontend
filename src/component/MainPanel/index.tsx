@@ -17,6 +17,7 @@ import Header from "../Header/Header";
 import IntroducePanel from "../IntroducePanel";
 import EmptyPagePanel from "../EmptyPagePanel";
 import * as Yup from "yup";
+import { store, useAppDispatch } from "$src/pages/MainPage/configureStore";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -76,7 +77,7 @@ const MainPanel = () => {
   const pageContent = useSelector((state: RootState) => state.page.pageContent);
   const currentPageId = useSelector((state: RootState) => state.page.currentPageId);
   const { createInputEl, insertInpulElToMiddleInput, insertInputElToLastInput, saveInputAllContent } = useDom();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const startInput = inputWrapperRef.current?.querySelector('input') as HTMLElement;
@@ -238,7 +239,7 @@ const MainPanel = () => {
     },
     validationSchema: Yup.object().shape({
       id: Yup.string().min(6, '6자 이상 입력해주세요.').required('아이디를 입력해주세요.'),
-      password: Yup.string().min(8, '8자 이상 입력해주세요.').required('패스워드를 입력해주세요.'),
+      password: Yup.string().min(8, '8자 이상 입력해주세요.').required('비밀번호를 입력해주세요.'),
       nickname: Yup.string().max(12, '12글자 이하로 입력해주세요.').required('닉네입을 입력해주세요.'),
     }),
     enableReinitialize: true,
@@ -248,7 +249,7 @@ const MainPanel = () => {
       setRegisterModalOpenState(false);
     },
   });
-
+  const [isSuccessLogin, setSuccessLoginState] = useState(false);
 
   const loginFormik = useFormik({
     initialValues: {
@@ -257,17 +258,24 @@ const MainPanel = () => {
     },
     validationSchema: Yup.object().shape({
       id: Yup.string().required('아이디를 입력해주세요.'),
-      password: Yup.string().required('패스워드를 입력해주세요.'),
+      password: Yup.string().required('비밀번호를 입력해주세요.'),
     }),
     enableReinitialize: true,
     onSubmit: async info => {
-      dispatch(logInPage(info));
-      setClickSubmitButtonState(true);
-      setLoginModalOpenState(false);
+      await dispatch(logInPage(info)).unwrap().then(result => {
+        if (result.loginError === 'failed') {
+          setClickSubmitButtonState(true);
+          setSuccessLoginState(false);
+        } else {
+          setSuccessLoginState(true);
+          setClickSubmitButtonState(true);
+          setLoginModalOpenState(false);
+        }
+      });
     }
   })
 
-  const handleClickLogout = () => {
+  const handleClickLogout = (e?: React.MouseEvent<HTMLElement>) => {
     dispatch(logoutUser({}));
     dispatch(initPageList({}));
     dispatch(initPageContent({}));
@@ -275,6 +283,7 @@ const MainPanel = () => {
     setLoginButtonState(false);
     setRegisterButtonState(false);
     setClickSubmitButtonState(false);
+    loginFormik.handleReset(e);
   }
 
   const deletePageToId = async () => {
@@ -293,7 +302,7 @@ const MainPanel = () => {
         <RegisterModal formik={registerFormik} clickClose={handleCloseRegisterModal} clickCloseIcon={handleClickCloseButton} clickLogin={handleOpenLoginModal} />
       }
       {(isLoginModalOpen || (!userId && isClickedLoginButton)) &&
-        <LoginModal formik={loginFormik} clickCloseIcon={handleClickCloseButton} clickRegister={handleOpenRegisterModal} isClickSubmitButton={isClickSubmitButton} />
+        <LoginModal formik={loginFormik} clickCloseIcon={handleClickCloseButton} clickRegister={handleOpenRegisterModal} isLoginModalOpen={isLoginModalOpen} isSuccessLogin={isSuccessLogin} isClickSubmitButton={isClickSubmitButton}/>
       }
       <Header
         clickLogout={handleClickLogout}
