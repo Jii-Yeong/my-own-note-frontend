@@ -2,27 +2,22 @@ import React from "react";
 import styled from "styled-components";
 import Button from "../Button";
 
-type Props = {
-  clickClose: () => void;
-  clickCloseIcon: () => void;
-  formik: any;
-}
-
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   background-color: #ffffff5f;
   position: absolute;
+  z-index: 1;
 `
 
 const ModalWrapper = styled.div`
   width: 30%;
-  height: 65%;
+  height: 75%;
   background-color: #ffffff;
   border: 1px solid #0000002f;
   position: absolute;
   top: 15%;
-  left: 35%;
+  left: 25%;
 `
 
 const Title = styled.div`
@@ -36,6 +31,8 @@ const Title = styled.div`
 `
 
 const Form = styled.form`
+  position: relative;
+  left: 3%;
   & > * {
     display: block;
   }
@@ -59,8 +56,21 @@ const Cancel = styled.img`
   height: 6%;
   cursor: pointer;
 `
+const RedirectRegister = styled.p`
+  position: absolute;
+  top: 70%;
+  left: 25%;
+  cursor: pointer;
+`
 
-const LoginModal = ({ clickClose, clickCloseIcon, formik }: Props) => {
+type Props = {
+  clickClose: () => void;
+  clickCloseIcon: () => void;
+  formik: any;
+  clickRegister: () => void;
+}
+
+const LoginModal = ({ clickClose, clickCloseIcon, formik, clickRegister }: Props) => {
   return (
     <Wrapper>
       <ModalWrapper>
@@ -80,13 +90,14 @@ const LoginModal = ({ clickClose, clickCloseIcon, formik }: Props) => {
               borderRadius: 4,
               fontSize: 20,
               position: 'absolute',
-              top: 70,
+              top: 115,
               left: 8,
             }}
             buttonClick={clickClose}
             name="로그인"
           />
         </Form>
+        <RedirectRegister onClick={() => clickRegister()}>아직 아이디가 없으시다면 회원가입</RedirectRegister>
       </ModalWrapper>
     </Wrapper>
   )

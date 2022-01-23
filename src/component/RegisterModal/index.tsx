@@ -1,19 +1,14 @@
-import { FormikConfig } from "formik";
+import { FormikHandlers } from "formik";
 import React from "react";
 import styled from "styled-components";
 import Button from "../Button";
-
-type Props = {
-  clickClose: () => void;
-  clickCloseIcon: () => void;
-  formik: any;
-}
 
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   background-color: #ffffff5f;
   position: absolute;
+  z-index: 1;
 `
 
 const ModalWrapper = styled.div`
@@ -23,7 +18,7 @@ const ModalWrapper = styled.div`
   border: 1px solid #0000002f;
   position: absolute;
   top: 15%;
-  left: 35%;
+  left: 25%;
 `
 
 const Title = styled.p`
@@ -37,6 +32,8 @@ const Title = styled.p`
 `
 
 const Form = styled.form`
+  position: relative;
+  left: 3%;
   & > * {
     display: block;
   }
@@ -60,13 +57,26 @@ const Cancel = styled.img`
   cursor: pointer;
 `
 
-const RegisterModal = ({ clickClose, formik, clickCloseIcon }: Props) => {
+const RedirectLogin = styled.p`
+  position: absolute;
+  top: 87%;
+  left: 25%;
+  cursor: pointer;
+`
+
+type Props = {
+  formik: FormikHandlers;
+  clickCloseIcon: () => void;
+  clickLogin: () => void;
+}
+
+const RegisterModal = ({ formik, clickCloseIcon, clickLogin }: Props) => {
   return (
     <Wrapper>
       <ModalWrapper>
         <Title>
           회원가입
-          <Cancel onClick={() => clickCloseIcon()} src="../../images/cancel_icon.svg"/>
+          <Cancel onClick={() => clickCloseIcon()} src="../../images/cancel_icon.svg" />
         </Title>
         <Form onSubmit={formik.handleSubmit}>
           <Label>아이디</Label>
@@ -75,7 +85,7 @@ const RegisterModal = ({ clickClose, formik, clickCloseIcon }: Props) => {
           <Input id="password" name="password" type="text" onChange={formik.handleChange} />
           <Label>닉네임</Label>
           <Input id="nickname" name="nickname" type="text" onChange={formik.handleChange} />
-          <Button name="회원가입" 
+          <Button name="회원가입"
             buttonType="submit"
             cssObject={{
               width: 360,
@@ -83,12 +93,15 @@ const RegisterModal = ({ clickClose, formik, clickCloseIcon }: Props) => {
               borderRadius: 4,
               position: 'absolute',
               fontSize: 20,
-              top: 80,
+              top: 110,
               left: 8,
             }}
             buttonClick={clickCloseIcon}
           />
         </Form>
+        <RedirectLogin onClick={() => { clickLogin() }}>
+          이미 아이디가 존재한다면 로그인
+        </RedirectLogin>
       </ModalWrapper>
     </Wrapper>
   )
