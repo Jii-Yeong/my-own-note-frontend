@@ -9,6 +9,7 @@ type Props = {
 
 const Wrapper = styled.div`
   display: flex;
+  margin: 0px 0px 50px 0px;
 `
 
 const Text = styled.p`
@@ -17,7 +18,7 @@ const Text = styled.p`
 `
 
 const Input = styled.input`
-  width: 150px;
+  width: 200px;
   height: 25px;
   margin: 0px 0px 0px 23px;
   border-radius: 5px;
