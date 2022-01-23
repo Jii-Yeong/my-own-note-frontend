@@ -94,7 +94,7 @@ export const makeInputElement = (handleInputKeyUp: (e: KeyboardEvent) => void, s
   inputEl.style.fontFamily = '"nanum"';
   inputEl.dataset.style = style ?? '';
   if (style === 'h1') {
-    inputEl.style.fontSize = '35px';
+    inputEl.style.fontSize = '30px';
     inputEl.style.height = '50px';
     inputEl.style.fontWeight = 'bolder';
   }
