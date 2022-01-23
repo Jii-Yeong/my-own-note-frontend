@@ -15,16 +15,16 @@ const Wrapper = styled.div`
 
 const NoteTitle = styled.div`
   color: #ffffff;
-  font-size: 25px;
+  font-size: 22px;
   font-weight: bold;
-  margin: 20px 0px 20px 0px;
+  margin: 40px 0px 10px 6px;
 `
 
 const SidePanel = () => {
   const userId = useSelector((state: RootState) => state.userInfo.id, shallowEqual);
   const pageList = useSelector((state: RootState) => state.page.pageList, shallowEqual);
   const [selectedPageList, setSelectedPageList] = useState<Array<PAGES>>([]);
-
+  console.log("pageList", pageList);
   const [isAdditingPage, setAdditionPageState] = useState(false);
   const dispatch = useDispatch();
 
@@ -73,9 +73,9 @@ const SidePanel = () => {
   return (
     <>
     <Wrapper>
-      <NoteTitle>✨소즁한 내 노트</NoteTitle>
+      <NoteTitle>✨ MY OWN NOTE</NoteTitle>
       <TreeNode pageList={pageList.pages} selectedPageList={selectedPageList} clickToggleDepths={handleClickToggleDepths} clickPageTitle={handleClickPageTitle}/>
-      <AddPage isAdditing={isAdditingPage} clickAddMode={handleToggleAddPost} enterAddPage={handleEnterAddPage} />
+      {userId && <AddPage isAdditing={isAdditingPage} clickAddMode={handleToggleAddPost} enterAddPage={handleEnterAddPage} />}
     </Wrapper>
     </>
   )

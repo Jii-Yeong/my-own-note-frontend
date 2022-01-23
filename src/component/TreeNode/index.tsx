@@ -1,9 +1,9 @@
-import { PAGE_LIST } from "$src/types/page";
+import { PAGES } from "$src/types/page";
 import React from "react";
 import styled from "styled-components";
 import { IMAGE_URL } from '$config/proxy';
 const Wrapper = styled.div`
-  margin: 50px 0px 0px 25px;
+  margin: 30px 0px 0px 25px;
   padding: 0;
 `
 
@@ -20,7 +20,6 @@ const TreeList = styled.div`
 const TriagleButton = styled.button<{ isOpen: boolean }>`
   height: 16px;
   margin: 13px 0px 0px 0px;
-  // background: url(../images/polygon.svg);
   background: url(${IMAGE_URL}/images/polygon.svg);
   background-size: contain;
   background-repeat: no-repeat;
@@ -36,8 +35,8 @@ const TreeWrapper = styled.div`
 `
 
 type Props = {
-  pageList: Array<PAGE_LIST>;
-  selectedPageList: Array<PAGE_LIST>;
+  pageList: Array<PAGES>;
+  selectedPageList: Array<PAGES>;
   clickToggleDepths: (pageId: number) => void
   clickPageTitle: (pageId: number, title: string) => void
 }
