@@ -38,7 +38,7 @@ const Image = styled.img`
 `
 
 const AddPage = ({ isAdditing, clickAddMode, enterAddPage }: Props) => {
-  const imageSrc = !isAdditing ? `${IMAGE_URL}/build/images/add_input_icon.svg` : `${IMAGE_URL}/build/images/cancel_input_icon.svg`;
+  const imageSrc = !isAdditing ? `${IMAGE_URL}/images/add_input_icon.svg` : `${IMAGE_URL}/images/cancel_input_icon.svg`;
   const text = !isAdditing ? '페이지 추가하기' : '닫기';
   return (
     <>

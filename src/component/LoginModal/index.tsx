@@ -1,3 +1,4 @@
+import { IMAGE_URL } from "$config/proxy";
 import React from "react";
 import styled from "styled-components";
 import Button from "../Button";
@@ -92,7 +93,7 @@ const LoginModal = ({ clickCloseIcon, formik, clickRegister, isLoginModalOpen, i
       <ModalWrapper>
         <Title>
           로그인
-          <Cancel onClick={(e) => clickCloseIcon(e)} src="../build/images/cancel_icon.svg"/>
+          <Cancel onClick={(e) => clickCloseIcon(e)} src={`${IMAGE_URL}/images/cancel_icon.svg`}/>
         </Title>
         <Form onSubmit={formik.handleSubmit}>
           <Label>아이디</Label>

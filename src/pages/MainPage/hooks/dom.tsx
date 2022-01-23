@@ -144,7 +144,7 @@ const useDom = () => {
   ) => {
     const divEl = document.createElement('div');
     addDragEventListener(divEl, handleInputKeyUp, wrapper ?? null, currentPageId ?? undefined, saveInputAllContent, handleChangeToCommand)
-    divEl.style.background = `url(${IMAGE_URL}/build/images/move_bar.svg)`;
+    divEl.style.background = `url(${IMAGE_URL}/images/move_bar.svg)`;
     divEl.style.backgroundSize = 'contain';
     divEl.style.backgroundRepeat = 'no-repeat';
     divEl.style.backgroundColor = 'transparent';
