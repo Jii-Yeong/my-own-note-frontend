@@ -30,15 +30,15 @@ const Image = styled.div`
   width: 35px;
   height: 35px;
   cursor: pointer;
-  margin: 45px;
+  margin: 25px 25px 25px 25px;
   background: url(../../images/delete_page_icon.svg);
   background-size: contain;
   background-repeat: no-repeat;
   background-color: transparent;
   border: none;
   &:hover {
-    width: 36px;
-    height: 36px;
+    width: 35px;
+    height: 35px;
     background: url(../../images/delete_forever_icon.svg);
     background-size: contain;
     background-repeat: no-repeat;
