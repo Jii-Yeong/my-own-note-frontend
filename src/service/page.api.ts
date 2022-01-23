@@ -1,5 +1,5 @@
 import axios from "axios"
-import { Page } from "./types/page"
+import { Page, PageContentTextList } from "./types/page"
 
 export const getAllPageList = (userId: string) => {
   const data = {
@@ -20,10 +20,10 @@ export const getPageContent = (pageId: number, title: string) => {
   return axios.post('/api/page/select/id', data).then(response => response.data);
 }
 
-export const addPageContent = (pageId: number, textList: Array<string>) => {
+export const addPageContent = (pageId: number, textList: Array<PageContentTextList>) => {
   const data = {
     pageId: pageId ?? 0,
-    text: textList,
+    textList: textList,
   }
   return axios.post('api/page/insert/content', data).then(response => response.data);
 }

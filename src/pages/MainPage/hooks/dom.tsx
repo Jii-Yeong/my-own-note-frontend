@@ -40,13 +40,23 @@ export const handleDropElement = (e: DragEvent | React.DragEvent<HTMLElement>, h
   const dragDiv = document.getElementById('clicked');
   const dragCloneDiv = dragDiv?.cloneNode(true) as HTMLElement;
   const targetCloneDiv = target?.cloneNode(true) as HTMLElement;
+
   if (wrapper) {
     addDragEventListener(dragCloneDiv, handleInputKeyUp, wrapper, currentPageId, saveInputAllContent)
     addDragEventListener(targetCloneDiv, handleInputKeyUp, wrapper, currentPageId, saveInputAllContent)
   }
   if (dragCloneDiv && dragDiv) {
-    dragCloneDiv.querySelector('input')?.addEventListener('keyup', handleInputKeyUp);
-    targetCloneDiv.querySelector('input')?.addEventListener('keyup', handleInputKeyUp);
+    const dragCloneInput = dragCloneDiv.querySelector('input');
+    const targetCloneInput = targetCloneDiv.querySelector('input');
+    const dragInputStyle = dragDiv.querySelector('input')?.dataset.style;
+    const targetInputStyle = target.querySelector('input')?.dataset.style;
+    console.log("dragInputStyle", dragInputStyle, targetInputStyle);
+    if (dragCloneInput && targetCloneInput) {
+      dragCloneInput.addEventListener('keyup', handleInputKeyUp);
+      dragCloneInput.dataset.style = dragInputStyle;
+      targetCloneInput.addEventListener('keyup', handleInputKeyUp);
+      targetCloneInput.dataset.style = targetInputStyle;
+    }
     dragDiv.replaceWith(targetCloneDiv);
     target.replaceWith(dragCloneDiv);
     targetCloneDiv.style.borderBottom = 'none';
@@ -72,9 +82,39 @@ export const addDragEventListener = (divEl: HTMLElement, handleInputKeyUp: (e: K
   });
 }
 
+export const makeInputElement = (handleInputKeyUp: (e: KeyboardEvent) => void, style: string, text: string) => {
+  const inputEl = document.createElement('input');
+  inputEl.addEventListener('keyup', handleInputKeyUp);
+  inputEl.style.display = 'block';
+  inputEl.style.height = '30px';
+  inputEl.style.width = '93%';
+  inputEl.style.margin = '0px 0px 0px 15px';
+  inputEl.style.border = 'none';
+  inputEl.style.fontSize = '15px';
+  inputEl.style.fontFamily = '"nanum"';
+  inputEl.dataset.style = style ?? '';
+  if (style === 'h1') {
+    inputEl.style.fontSize = '35px';
+    inputEl.style.height = '50px';
+    inputEl.style.fontWeight = 'bolder';
+  }
+  if (style === 'h2') {
+    inputEl.style.fontSize = '25px';
+    inputEl.style.height = '30px;'
+    inputEl.style.fontWeight = 'bolder';
+  } 
+  if (style === 'h3') {
+    inputEl.style.fontSize = '20px';
+    inputEl.style.height = '25px;'
+    inputEl.style.fontWeight = 'bolder';
+  }
+  inputEl.value = text ?? '';
+  return inputEl;
+}
+
 const useDom = () => {
   const dispatch = useDispatch();
-  const createInputEl = (handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, wrapper?: HTMLDivElement, currentPageId?: number, text?: string) => {
+  const createInputEl = (handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, wrapper?: HTMLDivElement, currentPageId?: number, text?: string, style?: string) => {
     const divEl = document.createElement('div');
 
     if (wrapper && currentPageId) {
@@ -92,17 +132,10 @@ const useDom = () => {
     divEl.style.zIndex = '50';
     divEl.style.alignItems = 'center';
     divEl.draggable = true;
-    const inputEl = document.createElement('input');
-    inputEl.addEventListener('keyup', handleInputKeyUp);
-    inputEl.style.display = 'block';
-    inputEl.style.height = '30px';
-    inputEl.style.width = '93%';
-    inputEl.style.margin = '0px 0px 0px 15px';
-    inputEl.style.border = 'none';
-    inputEl.style.fontSize = '15px';
-    inputEl.style.fontFamily = '"nanum"';
-    inputEl.value = text ?? '';
-    divEl.appendChild(inputEl);
+    if (style && text) {
+      const inputEl = makeInputElement(handleInputKeyUp, style, text);
+      divEl.appendChild(inputEl);
+    }
     return divEl;
   }
 
@@ -110,6 +143,7 @@ const useDom = () => {
     const divEl = createInputEl(handleInputKeyUp);
     divEl.style.display = 'flex';
     divEl.draggable = true;
+    divEl.className = 'new-div';
     parentNode.after(divEl);
     const divFirstChild = divEl.querySelector('input') as HTMLElement;
     divFirstChild.focus();
@@ -142,8 +176,14 @@ const useDom = () => {
     const inputElNodeList = wrapper?.querySelectorAll('input') as NodeList;
     if (inputElNodeList) {
       const inputElList = Array.from(inputElNodeList);
-      const textList = inputElList.map(input => (input as HTMLInputElement).value);
-      if (!textList[textList.length - 1]) {
+      const textList = inputElList.map(input => {
+        const currentInput = input as HTMLInputElement;
+        return {
+          text: currentInput.value,
+          style: currentInput.dataset.style ?? '',
+        }
+      });
+      if (!textList[textList.length - 1].text) {
         textList.pop();
       }
       dispatch(insertPageContent({ currentPageId, textList }));

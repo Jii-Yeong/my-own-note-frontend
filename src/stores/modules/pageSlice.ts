@@ -75,6 +75,7 @@ const initialState = {
   pageContent: {},
   addPageState: {},
   error: '',
+  styleList: [],
 }
 
 const pageSlice = createSlice<PAGE, SliceCaseReducers<PAGE>, 'pages'>({

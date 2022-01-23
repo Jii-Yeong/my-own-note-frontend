@@ -77,11 +77,11 @@ const MainPanel = () => {
       const newDivElList = Array.from(wrapperNodeList);
       newDivElList.forEach(div => {
         wrapper?.removeChild(div);
-      })
+      });
       pageContent.text.forEach((content: { [key: string]: any }) => {
-        const divEl = createInputEl(handleInputKeyUp, wrapper, currentPageId, content.text) as HTMLElement;
+        const divEl = createInputEl(handleInputKeyUp, wrapper, currentPageId, content.text, content.style) as HTMLElement;
         wrapper?.prepend(divEl);
-      })
+      });
     }
   }, [pageContent]);
 
@@ -248,7 +248,6 @@ const MainPanel = () => {
 
   const deletePageToId = async () => {
     if (currentPageId && userId){
-      console.log("userId", userId);
       await dispatch(deletePage(currentPageId));
       await dispatch(selectAllPageList(userId));
       dispatch(initPageContent({}));

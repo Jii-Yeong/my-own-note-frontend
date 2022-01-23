@@ -10,18 +10,21 @@ export const convertHtmlElements = (content: string, sliceTextLineCommand: strin
       fontSize: '30px',
       height: '50px',
       placeholder: '제목1',
+      styleName: 'h1',
     }
   } else if (sliceTextLineCommand === '## ') {
     return {
       fontSize: '20px',
       height: '30px',
       placeholder: '제목2',
+      styleName: 'h2',
     }
   } else if (sliceTextLineCommand === '### ') {
     return {
       fontSize: '15px',
       height: '20px',
       placeholder: '제목3',
+      styleName: 'h3',
     }
   } else if (sliceTextLineCommand === '-[] ') {
     return {
@@ -53,8 +56,8 @@ export const convertInputValue = (currentTarget: HTMLInputElement, setStyleObjec
   const replaceText = convertHtmlElements(content, sliceTextLineCommand) as { [key: string]: any };
   const styleList = Object.keys(replaceText);
   if (styleList.length !== 0) {
+    currentTarget.dataset.style = replaceText.styleName;
     const targetStyle = currentTarget.style as { [key: string]: any };
-    console.log("styleList", styleList);
     styleList.forEach(style => {
       targetStyle[style] = replaceText[`${style}`];
     })
