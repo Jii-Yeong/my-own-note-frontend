@@ -21,6 +21,18 @@ import * as Yup from "yup";
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 9px;
+  } 
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 100px;
+  } 
+  &::-webkit-scrollbar-thumb {
+    background-color: #6667ab8f;
+    border-radius: 100px;
+  }
 `
 
 

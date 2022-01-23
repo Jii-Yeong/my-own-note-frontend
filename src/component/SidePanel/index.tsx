@@ -9,8 +9,20 @@ import TreeNode from "../TreeNode";
 
 const Wrapper = styled.div`
   background-color: #6667ab;
-  width: 15%;
+  width: 19%;
   height: 100%;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 9px;
+  } 
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 100px;
+  } 
+  &::-webkit-scrollbar-thumb {
+    background-color: #d0368a9f;
+    border-radius: 100px;
+  }
 `
 
 const NoteTitle = styled.div`
