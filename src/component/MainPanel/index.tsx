@@ -9,12 +9,13 @@ import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { RootState } from "$src/stores/types/root";
 import useDom, { handleDragOverElement } from "$src/pages/MainPage/hooks/dom";
 import { useFormik } from "formik";
-import { logInPage, logoutUser } from "$src/stores/modules/userSlice";
+import { logInPage, logoutUser, registerInPage } from "$src/stores/modules/userSlice";
 import RegisterModal from "../RegisterModal";
 import LoginModal from "../LoginModal";
 import { initPageList } from "$src/stores/modules/pageSlice";
 import Header from "../Header/Header";
 import IntroducePanel from "../IntroducePanel";
+import EmptyPagePanel from "../EmptyPagePanel";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -34,6 +35,7 @@ const MainPanel = () => {
   const [isRegisterModalOpen, setRegisterModalOpenState] = useState(false);
   const [isLoginModalOpen, setLoginModalOpenState] = useState(false);
   const [isClickedLoginButton, setLoginButtonState] = useState(false);
+  const [isClickedRegisterButton, setRegisterButtonState] = useState(false);
   const pageContent = useSelector((state: RootState) => state.page.pageContent);
   const currentPageId = useSelector((state: RootState) => state.page.currentPageId);
   const { createInputEl, insertInpulElToMiddleInput, insertInputElToLastInput, saveInputAllContent } = useDom();
@@ -156,6 +158,9 @@ const MainPanel = () => {
 
   const handleOpenRegisterModal = () => {
     setRegisterModalOpenState(true);
+    setRegisterButtonState(true);
+    setLoginModalOpenState(false);
+    setLoginButtonState(false);
   }
 
   const handleCloseRegisterModal = () => {
@@ -165,6 +170,9 @@ const MainPanel = () => {
   const handleOpenLoginModal = () => {
     setLoginModalOpenState(true);
     setLoginButtonState(true);
+    setRegisterModalOpenState(false);
+    setRegisterButtonState(false);
+    setRegisterButtonState(false);
   }
 
   const handleCloseLoginModal = () => {
@@ -174,7 +182,9 @@ const MainPanel = () => {
   const handleClickCloseButton = () => {
     setLoginModalOpenState(false);
     setLoginButtonState(false);
+    setRegisterButtonState(false);
     setRegisterModalOpenState(false);
+    setRegisterButtonState(false);
   }
 
   const registerFormik = useFormik({
@@ -183,8 +193,9 @@ const MainPanel = () => {
       password: '',
       nickname: '',
     },
-    onSubmit: values => {
-      console.log("values", values);
+    onSubmit: async info => {
+      await dispatch(registerInPage(info))
+      await dispatch(logInPage(info));
     },
   });
 
@@ -202,16 +213,17 @@ const MainPanel = () => {
     dispatch(logoutUser({}));
     dispatch(initPageList({}));
     setLoginButtonState(false);
+    setRegisterButtonState(false);
   }
 
   return (
     <Wrapper>
       {isOpenTextModal && <TextModal clickTextList={handleClickTextList} />}
-      {isRegisterModalOpen &&
-        <RegisterModal formik={registerFormik} clickClose={handleCloseRegisterModal} clickCloseIcon={handleClickCloseButton} />
+      {(isRegisterModalOpen || (!userId && isClickedRegisterButton)) &&
+        <RegisterModal formik={registerFormik} clickClose={handleCloseRegisterModal} clickCloseIcon={handleClickCloseButton} clickLogin={handleOpenLoginModal} />
       }
       {(isLoginModalOpen || (!userId && isClickedLoginButton)) &&
-        <LoginModal formik={loginFormik} clickClose={handleCloseLoginModal} clickCloseIcon={handleClickCloseButton} />
+        <LoginModal formik={loginFormik} clickClose={handleCloseLoginModal} clickCloseIcon={handleClickCloseButton} clickRegister={handleOpenRegisterModal}/>
       }
       <Header
         clickLogout={handleClickLogout}
@@ -230,9 +242,9 @@ const MainPanel = () => {
             dropElement={handleDragOverElement} />
         </>
         : userId ?
-        <IntroducePanel />
+        <EmptyPagePanel />
         :
-        <div>로그인 해줘</div>
+        <IntroducePanel openRegisterModal={handleOpenRegisterModal} />
       }
     </Wrapper>
   )

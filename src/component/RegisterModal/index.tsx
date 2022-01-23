@@ -66,11 +66,12 @@ const RedirectLogin = styled.p`
 
 type Props = {
   formik: FormikHandlers;
+  clickClose: () => void;
   clickCloseIcon: () => void;
   clickLogin: () => void;
 }
 
-const RegisterModal = ({ formik, clickCloseIcon, clickLogin }: Props) => {
+const RegisterModal = ({ formik, clickClose, clickCloseIcon, clickLogin }: Props) => {
   return (
     <Wrapper>
       <ModalWrapper>
@@ -96,7 +97,7 @@ const RegisterModal = ({ formik, clickCloseIcon, clickLogin }: Props) => {
               top: 110,
               left: 8,
             }}
-            buttonClick={clickCloseIcon}
+            buttonClick={clickClose}
           />
         </Form>
         <RedirectLogin onClick={() => { clickLogin() }}>
