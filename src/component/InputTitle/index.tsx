@@ -8,7 +8,7 @@ const Wrapper = styled.div`
 
 const InputBox = styled.input`
   font-size: 45px;
-  margin: 34px;
+  margin: 25px 0px 10px 70px;
   border: none;
   font-family: 'nanum';
   &:focus {
