@@ -16,6 +16,7 @@ export type PAGES = {
   parentPageId: number;
   pageId: number;
   pageName: string;
+  isSelected: boolean;
 }
 
 export type PAGE_CONTENT = {

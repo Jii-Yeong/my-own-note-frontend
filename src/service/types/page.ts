@@ -3,7 +3,12 @@ export type Page = {
   userId: string;
 }
 
+export type PageContentTextList = {
+  text: string;
+  style: string;
+}
+
 export type PageContentInsertRequest = {
   currentPageId: number;
-  textList: Array<string>;
+  textList: Array<PageContentTextList>;
 }

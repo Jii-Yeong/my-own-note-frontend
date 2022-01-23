@@ -11,20 +11,23 @@ export const convertHtmlElements = (content: string, sliceTextLineCommand: strin
       height: '50px',
       placeholder: '제목1',
       styleName: 'h1',
+      fontWeight: 'bolder',
     }
   } else if (sliceTextLineCommand === '## ') {
     return {
-      fontSize: '20px',
+      fontSize: '25px',
       height: '30px',
       placeholder: '제목2',
       styleName: 'h2',
+      fontWeight: 'bolder',
     }
   } else if (sliceTextLineCommand === '### ') {
     return {
-      fontSize: '15px',
-      height: '20px',
+      fontSize: '20px',
+      height: '25px',
       placeholder: '제목3',
       styleName: 'h3',
+      fontWeight: 'bolder',
     }
   } else if (sliceTextLineCommand === '-[] ') {
     return {
@@ -49,12 +52,14 @@ export const convertHtmlElements = (content: string, sliceTextLineCommand: strin
 }
 
 export const convertInputValue = (currentTarget: HTMLInputElement, setStyleObject: React.Dispatch<{[key: string]: any}>) => {
+  console.log("currentTarget", currentTarget.value);
   const content = currentTarget.value;
   const matchCommand = content.match(COMMEND_REGEX);
   const sliceTextLineCommand = matchCommand ? matchCommand[0] : '';
   const sliceTextLineContent = content.replace(COMMEND_REGEX, ``);
   const replaceText = convertHtmlElements(content, sliceTextLineCommand) as { [key: string]: any };
   const styleList = Object.keys(replaceText);
+  console.log("styleList", styleList);
   if (styleList.length !== 0) {
     currentTarget.dataset.style = replaceText.styleName;
     const targetStyle = currentTarget.style as { [key: string]: any };
