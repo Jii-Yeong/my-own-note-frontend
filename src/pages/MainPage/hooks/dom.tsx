@@ -65,7 +65,7 @@ export const handleDropElement = (e: DragEvent | React.DragEvent<HTMLElement>, h
 }
 
 export const addDragEventListener = (divEl: HTMLElement, handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, 
-    wrapper: HTMLElement, currentPageId: number, saveInputAllContent: Function) => {
+    wrapper: HTMLElement | null, currentPageId: number, saveInputAllContent: Function) => {
   divEl.className = 'new-div'
   divEl.style.display = 'flex';
   divEl.style.zIndex = '200';
@@ -116,10 +116,7 @@ const useDom = () => {
   const dispatch = useDispatch();
   const createInputEl = (handleInputKeyUp: (e: KeyboardEvent | React.KeyboardEvent<HTMLElement>) => void, wrapper?: HTMLDivElement, currentPageId?: number, text?: string, style?: string) => {
     const divEl = document.createElement('div');
-
-    if (wrapper && currentPageId) {
-      addDragEventListener(divEl, handleInputKeyUp, wrapper, currentPageId, saveInputAllContent)
-    }
+    addDragEventListener(divEl, handleInputKeyUp, wrapper ?? null, currentPageId, saveInputAllContent)
     const imageEl = document.createElement('img');
     imageEl.src = '../../images/move_bar.svg';
     imageEl.style.width = '20px';
@@ -127,6 +124,7 @@ const useDom = () => {
     imageEl.style.zIndex = '100';
     imageEl.style.verticalAlign = 'middle';
     imageEl.draggable = false;
+    imageEl.style.cursor = 'pointer'
     divEl.appendChild(imageEl);
     divEl.style.display = 'flex';
     divEl.style.zIndex = '50';
