@@ -29,7 +29,7 @@ const InputTitle = ({ title }: Props) => {
   }, [title])
   return (
     <Wrapper>
-      <InputBox ref={inputRef} placeholder="제목을 입력하세요." />
+      <InputBox ref={inputRef} placeholder="제목을 입력하세요." readOnly />
     </Wrapper>
   )
 }
