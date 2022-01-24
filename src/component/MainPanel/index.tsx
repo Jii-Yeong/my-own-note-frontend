@@ -41,8 +41,7 @@ let timer: NodeJS.Timeout | null;
 
 const Image = styled.div`
   opacity: 0.7;
-  width: 35px;
-  height: 35px;
+  width: 3%;
   cursor: pointer;
   margin: 25px 25px 25px 25px;
   background: url(${IMAGE_URL}/images/delete_page_icon.svg);
@@ -51,8 +50,7 @@ const Image = styled.div`
   background-color: transparent;
   border: none;
   &:hover {
-    width: 35px;
-    height: 35px;
+    width: 3%;
     background: url(${IMAGE_URL}/images/delete_forever_icon.svg);
     background-size: contain;
     background-repeat: no-repeat;

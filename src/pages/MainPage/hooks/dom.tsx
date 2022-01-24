@@ -104,11 +104,11 @@ export const makeInputElement = (
   inputEl.addEventListener('keydown', handleInputKeyUp);
   inputEl.addEventListener('keyup', handleChangeToCommand);
   inputEl.style.display = 'block';
-  inputEl.style.height = '40px';
+  inputEl.style.height = '30px';
   inputEl.style.width = '93%';
   inputEl.style.margin = '0px 0px 0px 36px';
   inputEl.style.border = 'none';
-  inputEl.style.fontSize = '15px';
+  inputEl.style.fontSize = '2vh';
   inputEl.style.fontFamily = '"nanum"';
   inputEl.style.backgroundColor = 'transparent';
   inputEl.style.outline = 'none';

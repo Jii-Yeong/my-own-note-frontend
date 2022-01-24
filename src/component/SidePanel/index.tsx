@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   width: 19%;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   &::-webkit-scrollbar {
     width: 9px;
   } 
@@ -27,9 +28,9 @@ const Wrapper = styled.div`
 
 const NoteTitle = styled.div`
   color: #ffffff;
-  font-size: 22px;
+  font-size: 1.5vmax;
   font-weight: bold;
-  margin: 40px 0px 10px 6px;
+  margin: 10% 7%;
 `
 
 const SidePanel = () => {

@@ -22,8 +22,8 @@ const ModalWrapper = styled.div`
 `
 
 const Title = styled.div`
-  font-size: 25px;
-  padding: 20px;
+  font-size: 1.2vmax;
+  padding: 4%;
   margin: 0 auto;
   color: #ffffff;
   background-color: #6667ab;
@@ -33,23 +33,26 @@ const Title = styled.div`
 
 const Form = styled.form`
   position: relative;
-  left: 3%;
+  width: 73%;
+  height: 70%;
+  margin: 0 auto;
   & > * {
     display: block;
   }
 `
 
 const Label = styled.label`
-  margin: 50px 0px 5px 50px;
-  font-size: 20px;
+  margin: 10% 0% 5% 0%;
+  font-size: 1.2vmax;
 `
 
 const Input = styled.input`
-  width: 350px;
-  height: 35px;
+  width: 100%;
+  height: 10%;
   border: 1px solid #0000005f;
   border-radius: 3px;
-  margin: 25px 0px 0px 50px;
+  margin: 25px 0px 0px 0px;
+  font-size: 1.2rem;
 `
 
 const Cancel = styled.img`
@@ -58,23 +61,23 @@ const Cancel = styled.img`
   cursor: pointer;
 `
 const RedirectRegister = styled.p`
-  position: absolute;
-  top: 85%;
-  left: 25%;
   cursor: pointer;
+  width: 50%;
+  height: 10%;
+  margin: 0 auto;
+  font-size: 1vmax;
 `
 
 const AlertMessage = styled.p`
   color: #ff0000;
-  position: absolute;
-  left: 29%;
+  font-size: 0.9vmax;
 `
 
 const InCorrectMessage = styled.p`
   color: #ff0000;
-  position: absolute;
-  left: 26%;
-  top: 75%;
+  width: 70%;
+  font-size: 1vmax;
+  margin: 0 auto;
 `
 
 type Props = {
@@ -93,30 +96,29 @@ const LoginModal = ({ clickCloseIcon, formik, clickRegister, isLoginModalOpen, i
       <ModalWrapper>
         <Title>
           로그인
-          <Cancel onClick={(e) => clickCloseIcon(e)} src={`${IMAGE_URL}/images/cancel_icon.svg`}/>
+          <Cancel onClick={(e) => clickCloseIcon(e)} src={`${IMAGE_URL}/images/cancel_icon.svg`} />
         </Title>
         <Form onSubmit={formik.handleSubmit}>
           <Label>아이디</Label>
-          <Input id="id" name="id" type="text" onChange={formik.handleChange} onInput={(e) => onInputText(e)}/>
+          <Input id="id" name="id" type="text" onChange={formik.handleChange} onInput={(e) => onInputText(e)} />
           {formik.errors['id'] && <AlertMessage>{formik.errors['id']}</AlertMessage>}
           <Label>비밀번호</Label>
           <Input id="password" name="password" type="password" onChange={formik.handleChange} />
           {formik.errors['password'] && <AlertMessage>{formik.errors['password']}</AlertMessage>}
           <Button buttonType="submit"
             cssObject={{
-              width: 360,
-              height: 45,
+              width: 100,
+              height: 10,
               borderRadius: 4,
-              fontSize: 20,
-              position: 'absolute',
-              top: 115,
-              left: 8,
+              fontSize: 1,
+              top: 130,
+              margin: '15% 0% 10% 0%'
             }}
-            buttonClick={() => {}}
+            buttonClick={() => { }}
             name="로그인"
           />
+          {(!isSuccessLogin && isLoginModalOpen && isClickSubmitButton) && <InCorrectMessage>아이디 또는 비밀번호가 틀렸습니다.</InCorrectMessage>}
         </Form>
-        {(!isSuccessLogin && isLoginModalOpen && isClickSubmitButton) && <InCorrectMessage>아이디 또는 비밀번호가 틀렸습니다.</InCorrectMessage>}
         <RedirectRegister onClick={() => clickRegister()}>아직 아이디가 없으시다면 회원가입</RedirectRegister>
       </ModalWrapper>
     </Wrapper>

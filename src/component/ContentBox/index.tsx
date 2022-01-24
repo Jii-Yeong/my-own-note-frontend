@@ -15,7 +15,7 @@ const Input = styled.input`
   height: 30px;
   width: 93%;
   border: none;
-  font-size: 15px;
+  font-size: 2vh;
   font-family: 'nanum';
   &: focus {
     outline: none;

@@ -3,23 +3,23 @@ import React from "react";
 import styled from "styled-components";
 import { IMAGE_URL } from '$config/proxy';
 const Wrapper = styled.div`
-  margin: 30px 0px 0px 25px;
-  padding: 0;
+  margin: 4%;
 `
 
 const TreeList = styled.div`
   list-style: none;
   color: #ffffff;
-  padding: 13px;
+  padding: 8%;
   cursor: pointer;
+  font-size: 1vw;
   &:hover {
     opacity: 0.5;
   }
 `
 
 const TriagleButton = styled.button<{ isOpen: boolean }>`
-  height: 16px;
-  margin: 13px 0px 0px 0px;
+  width: 10%;
+  margin: 8%;
   background: url(${IMAGE_URL}/images/polygon.svg);
   background-size: contain;
   background-repeat: no-repeat;
@@ -32,6 +32,10 @@ const TriagleButton = styled.button<{ isOpen: boolean }>`
 const TreeWrapper = styled.div`
   width: 150px;
   display: flex;
+`
+
+const TreeText = styled.div`
+  height: 1vw;
 `
 
 type Props = {
@@ -50,23 +54,23 @@ const TreeNode = ({ pageList, selectedPageList, clickToggleDepths, clickPageTitl
           <TreeWrapper key={`${page.pageId}-${index}`}>
             <TriagleButton onClick={() => clickToggleDepths(page.pageId)} isOpen={isOpen(page.pageId)}/>
             <TreeList onClick={() => clickPageTitle(page.pageId, page.pageName)}>
-              <div>{page.pageName}</div>
+              <TreeText>{page.pageName}</TreeText>
               {pageList.filter(pg => page.pageId === pg.parentPageId).map((pg, idx) => {
                 if (pg.isSelected)
                 return (
                   <TreeWrapper key={`${pg.pageId}-${idx}`}>
                     <TriagleButton onClick={() => clickToggleDepths(pg.pageId)} isOpen={isOpen(pg.pageId)}/>
                     <TreeList onClick={() => clickPageTitle(pg.pageId, pg.pageName)}>
-                      <div>
+                      <TreeText>
                         {pg.pageName}
-                      </div>
+                      </TreeText>
                       {pageList.filter(p => pg.pageId === p.parentPageId).map((p, i) => {
                         if (p.isSelected)
                         return (
                           <TreeWrapper key={`${p.pageId}-${i}`}>
                             <TriagleButton onClick={() => clickToggleDepths(p.pageId)} isOpen={isOpen(p.pageId)}/>
                             <TreeList onClick={() => clickPageTitle(p.pageId, p.pageName)}>
-                              <div>{p.pageName}</div>
+                              <TreeText>{p.pageName}</TreeText>
                             </TreeList>
                           </TreeWrapper>
                         )

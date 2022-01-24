@@ -1,23 +1,21 @@
 import { RootState } from "$src/stores/types/root";
-import { FormikHandlers } from "formik";
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Button from "../Button";
-import LoginModal from "../LoginModal";
-import RegisterModal from "../RegisterModal";
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: right;
+  height: 10%;
 `
 
 const Nickname = styled.p`
   color: #6667ab;
   font-family: 'nanum';
-  font-size: 17px;
+  font-size: 2vh;
   font-weight: bolder;
-  margin: 23px 10px 0px 8px;
+  margin: 1.7%;
 `
 
 type Props = {
@@ -41,9 +39,11 @@ const Header = ({
           <Button name="로그아웃"
             cssObject={
               {
-                width: 100,
-                height: 30,
-                borderRadius: 30,
+                width: 8,
+                height: 40,
+                borderRadius: 20,
+                margin: '1%',
+                fontSize: 0.9,
               }
             }
             buttonType="button"
@@ -54,9 +54,11 @@ const Header = ({
           <Button name="로그인"
             cssObject={
               {
-                width: 100,
-                height: 30,
-                borderRadius: 30,
+                width: 8,
+                height: 40,
+                borderRadius: 20,
+                margin: '1%',
+                fontSize: 0.9,
               }
             }
             buttonType="button"

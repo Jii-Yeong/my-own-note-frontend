@@ -10,31 +10,30 @@ type Props = {
 
 const Wrapper = styled.div`
   display: flex;
-  margin: 0px 0px 50px 0px;
+  font-size: 1vw;
+  margin: 0% 7%;
 `
 
 const Text = styled.p`
   color: #ffffff;
-  margin: 15px 0px 10px 26px;
 `
 
 const Input = styled.input`
-  width: 200px;
+  width: 80%;
   height: 25px;
-  margin: 0px 0px 0px 23px;
+  margin: 5%;
   border-radius: 5px;
   border: 1px solid #0000005f;
-  font-size: 15px;
+  font-size: 0.8vw;
   &:focus {
     outline: none;
   }
 `
 
 const Image = styled.img`
-  width: 23px;
-  height: 23px;
+  width: 10%;
+  margin: 3%;
   cursor: pointer;
-  margin: 13px 0px 10px 10px;
 `
 
 const AddPage = ({ isAdditing, clickAddMode, enterAddPage }: Props) => {

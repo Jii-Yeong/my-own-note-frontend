@@ -20,11 +20,23 @@ const ModalWrapper = styled.div`
   position: absolute;
   top: 15%;
   left: 25%;
+  overflow-y: auto;
+    &::-webkit-scrollbar {
+    width: 9px;
+  } 
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 100px;
+  } 
+  &::-webkit-scrollbar-thumb {
+    background-color: #6667ab8f;
+    border-radius: 100px;
+  }
 `
 
-const Title = styled.p`
-  font-size: 25px;
-  padding: 20px;
+const Title = styled.div`
+  font-size: 1.2vmax;
+  padding: 4%;
   margin: 0 auto;
   color: #ffffff;
   background-color: #6667ab;
@@ -34,24 +46,28 @@ const Title = styled.p`
 
 const Form = styled.form`
   position: relative;
-  left: 3%;
+  width: 73%;
+  height: 70%;
+  margin: 0 auto;
   & > * {
     display: block;
   }
 `
 
 const Label = styled.label`
-  margin: 25px 0px 5px 50px;
-  font-size: 20px;
+  margin: 10% 0% 5% 0%;
+  font-size: 1.2vmax;
 `
 
 const Input = styled.input`
-  width: 350px;
-  height: 35px;
+  width: 100%;
+  height: 9%;
   border: 1px solid #0000005f;
   border-radius: 3px;
-  margin: 25px 0px 0px 50px;
+  margin: 25px 0px 0px 0px;
+  font-size: 1.2rem;
 `
+
 const Cancel = styled.img`
   width: 6%;
   height: 6%;
@@ -59,15 +75,15 @@ const Cancel = styled.img`
 `
 
 const RedirectLogin = styled.p`
-  position: absolute;
-  top: 87%;
-  left: 25%;
   cursor: pointer;
+  width: 65%;
+  height: 10%;
+  margin: 0 auto;
+  font-size: 1vmax;
 `
 const AlertMessage = styled.p`
   color: #ff0000;
-  position: absolute;
-  left: 29%;
+  font-size: 0.9vmax;
 `
 
 type Props = {
@@ -102,20 +118,19 @@ const RegisterModal = ({ formik, clickClose, clickCloseIcon, clickLogin, onInput
           <Button name="회원가입"
             buttonType="submit"
             cssObject={{
-              width: 360,
-              height: 40,
+              width: 100,
+              height: 10,
               borderRadius: 4,
-              position: 'absolute',
-              fontSize: 20,
-              top: 110,
-              left: 8,
+              fontSize: 1,
+              top: 130,
+              margin: '15% 0% 10% 0%'
             }}
-            buttonClick={() => {}}
+            buttonClick={() => { }}
           />
+          <RedirectLogin onClick={() => { clickLogin() }}>
+            이미 아이디가 존재한다면 로그인
+          </RedirectLogin>
         </Form>
-        <RedirectLogin onClick={() => { clickLogin() }}>
-          이미 아이디가 존재한다면 로그인
-        </RedirectLogin>
       </ModalWrapper>
     </Wrapper>
   )
