@@ -3,23 +3,21 @@ import React from "react";
 import styled from "styled-components";
 import { IMAGE_URL } from '$config/proxy';
 const Wrapper = styled.div`
-  margin: 4%;
+  margin: 20% 4% 5% 4%;
 `
 
 const TreeList = styled.div`
   list-style: none;
   color: #ffffff;
-  padding: 8%;
+  padding: 0% 5%;
   cursor: pointer;
-  font-size: 1vw;
+  font-size: 20px;
   &:hover {
     opacity: 0.5;
   }
 `
 
 const TriagleButton = styled.button<{ isOpen: boolean }>`
-  width: 10%;
-  margin: 8%;
   background: url(${IMAGE_URL}/images/polygon.svg);
   background-size: contain;
   background-repeat: no-repeat;
@@ -30,12 +28,12 @@ const TriagleButton = styled.button<{ isOpen: boolean }>`
 `
 
 const TreeWrapper = styled.div`
-  width: 150px;
   display: flex;
+  height: 65px;
 `
 
 const TreeText = styled.div`
-  height: 1vw;
+  height: 20px;
 `
 
 type Props = {
