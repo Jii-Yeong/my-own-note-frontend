@@ -5,9 +5,9 @@ const Wrapper = styled.button<{object: any}>`
   border: 1px solid #6667ab;
   color: #6667ab;
   background-color: #ffffff;
-  ${({object}) => object && css`font-size: ${object.fontSize ?? 1}vmax;`}
-  ${({object}) => object && css`width: ${object.width}%;`}
-  ${({object}) => object && css`height: ${object.height}%;`}
+  ${({object}) => object && css`font-size: ${object.fontSize ?? 1}px;`}
+  ${({object}) => object && css`width: ${object.width}px;`}
+  ${({object}) => object && css`height: ${object.height}px;`}
   ${({object}) => object && css`border-radius: ${object.borderRadius}px;`}
   ${({object}) => object && css`position: ${object.position};`}
   ${({object}) => object && css`top: ${object.top}%;`}

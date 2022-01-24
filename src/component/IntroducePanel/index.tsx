@@ -44,12 +44,12 @@ const IntroducePanel = ({ openRegisterModal }: Props) => {
       <Button name="시작하기"
         cssObject={
           {
-            width: 18,
-            height: 30,
+            width: 150,
+            height: 50,
             borderRadius: 20,
             position: 'absolute',
             top: 190,
-            fontSize: 1,
+            fontSize: 20,
           }
         }
         buttonType="button"

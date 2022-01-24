@@ -13,13 +13,13 @@ const Wrapper = styled.div`
 `
 
 const ModalWrapper = styled.div`
-  width: 30%;
+  width: 600px;
   height: 75%;
   background-color: #ffffff;
   border: 1px solid #0000002f;
   position: absolute;
   top: 15%;
-  left: 25%;
+  left: 20%;
   overflow-y: auto;
     &::-webkit-scrollbar {
     width: 9px;
@@ -35,7 +35,7 @@ const ModalWrapper = styled.div`
 `
 
 const Title = styled.div`
-  font-size: 1.2vmax;
+  font-size: 2.5vh;
   padding: 4%;
   margin: 0 auto;
   color: #ffffff;
@@ -56,7 +56,7 @@ const Form = styled.form`
 
 const Label = styled.label`
   margin: 10% 0% 5% 0%;
-  font-size: 1.2vmax;
+  font-size: 2.5vh;
 `
 
 const Input = styled.input`
@@ -79,11 +79,11 @@ const RedirectLogin = styled.p`
   width: 65%;
   height: 10%;
   margin: 0 auto;
-  font-size: 1vmax;
+  font-size: 20px;
 `
 const AlertMessage = styled.p`
   color: #ff0000;
-  font-size: 0.9vmax;
+  font-size: 1.8vh;
 `
 
 type Props = {
@@ -118,10 +118,10 @@ const RegisterModal = ({ formik, clickClose, clickCloseIcon, clickLogin, onInput
           <Button name="회원가입"
             buttonType="submit"
             cssObject={{
-              width: 100,
-              height: 10,
+              width: 445,
+              height: 60,
               borderRadius: 4,
-              fontSize: 1,
+              fontSize: 25,
               top: 130,
               margin: '15% 0% 10% 0%'
             }}

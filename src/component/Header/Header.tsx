@@ -39,11 +39,11 @@ const Header = ({
           <Button name="로그아웃"
             cssObject={
               {
-                width: 8,
+                width: 100,
                 height: 40,
                 borderRadius: 20,
                 margin: '1%',
-                fontSize: 0.9,
+                fontSize: 15,
               }
             }
             buttonType="button"
@@ -54,11 +54,11 @@ const Header = ({
           <Button name="로그인"
             cssObject={
               {
-                width: 8,
+                width: 100,
                 height: 40,
                 borderRadius: 20,
                 margin: '1%',
-                fontSize: 0.9,
+                fontSize: 15,
               }
             }
             buttonType="button"

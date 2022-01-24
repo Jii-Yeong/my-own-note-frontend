@@ -12,17 +12,17 @@ const Wrapper = styled.div`
 `
 
 const ModalWrapper = styled.div`
-  width: 30%;
+  width: 600px;
   height: 75%;
   background-color: #ffffff;
   border: 1px solid #0000002f;
   position: absolute;
   top: 15%;
-  left: 25%;
+  left: 20%;
 `
 
 const Title = styled.div`
-  font-size: 1.2vmax;
+  font-size: 2.5vh;
   padding: 4%;
   margin: 0 auto;
   color: #ffffff;
@@ -43,7 +43,7 @@ const Form = styled.form`
 
 const Label = styled.label`
   margin: 10% 0% 5% 0%;
-  font-size: 1.2vmax;
+  font-size: 2.5vh;
 `
 
 const Input = styled.input`
@@ -65,18 +65,18 @@ const RedirectRegister = styled.p`
   width: 50%;
   height: 10%;
   margin: 0 auto;
-  font-size: 1vmax;
+  font-size: 20px;
 `
 
 const AlertMessage = styled.p`
   color: #ff0000;
-  font-size: 0.9vmax;
+  font-size: 1.8vh;
 `
 
 const InCorrectMessage = styled.p`
   color: #ff0000;
-  width: 70%;
-  font-size: 1vmax;
+  width: 75%;
+  font-size: 1.8vh;
   margin: 0 auto;
 `
 
@@ -107,10 +107,10 @@ const LoginModal = ({ clickCloseIcon, formik, clickRegister, isLoginModalOpen, i
           {formik.errors['password'] && <AlertMessage>{formik.errors['password']}</AlertMessage>}
           <Button buttonType="submit"
             cssObject={{
-              width: 100,
-              height: 10,
+              width: 445,
+              height: 60,
               borderRadius: 4,
-              fontSize: 1,
+              fontSize: 25,
               top: 130,
               margin: '15% 0% 10% 0%'
             }}
