@@ -240,6 +240,7 @@ const MainPanel = () => {
     validationSchema: Yup.object().shape({
       id: Yup.string().min(6, '6자 이상 입력해주세요.').required('아이디를 입력해주세요.'),
       password: Yup.string().min(8, '8자 이상 입력해주세요.').required('비밀번호를 입력해주세요.'),
+      passwordConfirm: Yup.string().min(8, '8자 이상 입력해주세요.').oneOf([Yup.ref("password"), null], '비밀번호가 일치하지 않습니다.'),
       nickname: Yup.string().max(12, '12글자 이하로 입력해주세요.').required('닉네입을 입력해주세요.'),
     }),
     enableReinitialize: true,
