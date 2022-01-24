@@ -25,18 +25,19 @@ const Input = styled.input`
 type Props = {
   inputWrapperRef: RefObject<HTMLDivElement>;
   divRef: RefObject<HTMLDivElement>;
+  onKeyCommand: (e: KeyboardEvent<HTMLInputElement>) => void;
   pressEnterKey: (e: KeyboardEvent<HTMLInputElement>) => void;
   dragOverElement: (e: DragEvent<HTMLDivElement>) => void;
   dropElement: (e: DragEvent<HTMLDivElement>) => void;
 }
 
-const ContentBox = ({ inputWrapperRef, divRef, pressEnterKey, dragOverElement, dropElement }: Props) => {
+const ContentBox = ({ inputWrapperRef, divRef, onKeyCommand, pressEnterKey, dragOverElement, dropElement }: Props) => {
   return (
     <Wrapper ref={divRef} id="wrapper">
       <div ref={inputWrapperRef} draggable={true} onDragOver={(e) => dragOverElement(e)}
         onDrop={(e) => dropElement(e)}
       >
-        <Input type="text" onKeyDown={(e) => pressEnterKey(e)} placeholder="글 작성하기" />
+        <Input type="text" onKeyUp={(e) => onKeyCommand(e)} onKeyDown={(e) => pressEnterKey(e)} placeholder="글 작성하기" />
       </div>
     </Wrapper >
   )

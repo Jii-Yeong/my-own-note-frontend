@@ -333,6 +333,7 @@ const MainPanel = () => {
             divRef={divRef}
             inputWrapperRef={inputWrapperRef}
             pressEnterKey={handlePressEnterKey}
+            onKeyCommand={handleChangeToCommand}
             dragOverElement={handleDragOverElement}
             dropElement={handleDragOverElement} />
         </>
