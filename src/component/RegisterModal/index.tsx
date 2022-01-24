@@ -1,5 +1,4 @@
 import { IMAGE_URL } from "$config/proxy";
-import { FormikHandlers } from "formik";
 import React from "react";
 import styled from "styled-components";
 import Button from "../Button";
@@ -110,6 +109,10 @@ const RegisterModal = ({ formik, clickClose, clickCloseIcon, clickLogin, onInput
           <Label>비밀번호</Label>
           <Input id="password" name="password" type="password" onChange={formik.handleChange} />
           {formik.errors['password'] && <AlertMessage>{formik.errors['password']}</AlertMessage>}
+
+          <Label>비밀번호 확인</Label>
+          <Input id="passwordConfirm" name="passwordConfirm" type="password" onChange={formik.handleChange} />
+          {formik.errors['passwordConfirm'] && <AlertMessage>{formik.errors['passwordConfirm']}</AlertMessage>}
 
           <Label>닉네임</Label>
           <Input id="nickname" name="nickname" type="text" onChange={formik.handleChange} />
